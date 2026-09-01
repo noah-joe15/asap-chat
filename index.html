@@ -106,7 +106,6 @@
 
         .typing-indicator { font-size: 12px; color: var(--primary-color); font-style: italic; padding: 4px 16px; min-height: 20px; opacity: 0.8; display: none; }
 
-        /* NEW: Connection Status Banner */
         .connection-banner {
             position: fixed;
             top: 0;
@@ -283,7 +282,6 @@
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
 
-    <!-- NEW: Connection Status Banner -->
     <div id="connection-banner" class="connection-banner">
         <i class="fa-solid fa-wifi"></i>
         <span id="connection-message">Connecting...</span>
@@ -359,7 +357,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, getDoc, getDocs, updateDoc, increment, deleteDoc, enableNetwork, disableNetwork } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, getDoc, getDocs, updateDoc, increment, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCEMqKLVJnjEwTGe3XKGzsVZqrrr2gU4xg",
@@ -410,7 +408,6 @@
         const connectionBanner = document.getElementById('connection-banner');
         const connectionMessage = document.getElementById('connection-message');
 
-        // --- NEW: Connection Status Monitoring ---
         function updateConnectionStatus(online) {
             isOnline = online;
             if (online) {
@@ -426,30 +423,9 @@
         window.addEventListener('online', () => updateConnectionStatus(true));
         window.addEventListener('offline', () => updateConnectionStatus(false));
 
-        // Initial check
         if (!navigator.onLine) {
             updateConnectionStatus(false);
         }
-
-        // --- NEW: Firebase Error Handling ---
-        // Listen for Firestore connection state
-        import { onSnapshotsInSync } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        
-        let hasShownError = false;
-        onSnapshotsInSync(db, () => {
-            hasShownError = false;
-        });
-
-        // Global error handler for Firebase
-        window.addEventListener('unhandledrejection', (event) => {
-            if (event.reason?.code === 'unavailable' || event.reason?.message?.includes('ERR_PROXY')) {
-                if (!hasShownError) {
-                    hasShownError = true;
-                    connectionBanner.className = 'connection-banner error show';
-                    connectionMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Connection failed. Check proxy/VPN settings.';
-                }
-            }
-        });
 
         sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('sidebar-open'));
         document.addEventListener('click', (e) => {
@@ -465,7 +441,6 @@
             localStorage.setItem('chatThemeColor', e.target.value);
         });
 
-        // --- PERSISTENT LOGIN CHECK ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
@@ -585,7 +560,6 @@
                 });
                 await Promise.all(chatPromises);
             }, (error) => {
-                // Handle Firestore errors gracefully
                 console.error("Chat load error:", error);
                 if (error.code === 'unavailable' || error.message?.includes('proxy')) {
                     connectionBanner.className = 'connection-banner error show';
@@ -594,21 +568,29 @@
             });
         }
 
+        // FIX: Removed loadChats() call from here to prevent duplicates
         function toggleChat(chatId, name) {
             if (currentChatId === chatId) {
-                currentChatId = null; chatHeader.classList.add('hidden'); inputArea.classList.add('hidden'); typingIndicator.style.display = 'none';
+                currentChatId = null; 
+                chatHeader.classList.add('hidden'); 
+                inputArea.classList.add('hidden'); 
+                typingIndicator.style.display = 'none';
                 emptyChatMsg.classList.remove('hidden');
                 messagesContainer.innerHTML = '<p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging</p>';
-                loadChats();
                 if (unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
                 if (unsubscribeTyping) { unsubscribeTyping(); unsubscribeTyping = null; }
-            } else { openChat(chatId, name); }
+            } else { 
+                openChat(chatId, name); 
+            }
         }
 
+        // FIX: Removed loadChats() call from here to prevent duplicates
         async function openChat(chatId, name) {
             currentChatId = chatId;
-            chatHeader.textContent = name; chatHeader.classList.remove('hidden'); inputArea.classList.remove('hidden');
-            emptyChatMsg.classList.add('hidden'); loadChats();
+            chatHeader.textContent = name; 
+            chatHeader.classList.remove('hidden'); 
+            inputArea.classList.remove('hidden');
+            emptyChatMsg.classList.add('hidden');
 
             const chatRef = doc(db, "chats", chatId);
             await updateDoc(chatRef, { [`unreadCounts.${currentUser.uid}`]: 0 });
@@ -616,12 +598,13 @@
             if (unsubscribeMessages) unsubscribeMessages();
             if (unsubscribeTyping) unsubscribeTyping();
             
+            messagesContainer.innerHTML = '';
+            
             const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
             let isInitialMessageLoad = true;
 
             unsubscribeMessages = onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
                 if (isInitialMessageLoad) {
-                    messagesContainer.innerHTML = '';
                     snapshot.forEach((docSnap) => renderMessage(docSnap));
                     isInitialMessageLoad = false;
                 } else {
