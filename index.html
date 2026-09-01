@@ -696,6 +696,37 @@
             background: rgba(0, 168, 132, 0.3);
             color: white;
         }
+/* Add this to your CSS to fix the invisible input area */
+#input-area {
+    display: flex !important; /* Override the hidden class */
+    flex-direction: column;
+    gap: 8px;
+}
+
+#input-area.hidden {
+    display: none !important; /* Only hide when explicitly hidden */
+}
+
+/* Ensure voice controls are visible */
+#voice-controls {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+/* Make sure buttons are visible */
+#mic-btn, #send-btn, #cancel-rec-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure input is visible */
+#message-input {
+    display: block !important;
+    flex: 1;
+}     
     </style>
 </head>
 <body>
