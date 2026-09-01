@@ -672,25 +672,60 @@
         });
 
         sendBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const text = messageInput.value.trim();
-            if (!text || !currentChatId) return;
-            if (!isOnline) { alert("You are offline. Message will be sent when connection is restored."); return; }
-            try {
-                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-                const senderName = userDoc.exists() ? userDoc.data().username : "User";
-                await addDoc(collection(db, "chats", currentChatId, "messages"), {
-                    type: 'text', text: text, senderId: currentUser.uid, senderName: senderName, timestamp: serverTimestamp()
-                });
-                updateDoc(doc(db, "chats", currentChatId), { [`typing.${currentUser.uid}`]: null }).catch(() => {});
-                const chatRef = doc(db, "chats", currentChatId);
-                const chatSnap = await getDoc(chatRef);
-                const updates = {};
-                chatSnap.data().members.forEach(uid => { if (uid !== currentUser.uid) updates[`unreadCounts.${uid}`] = increment(1); });
-                await updateDoc(chatRef, updates);
-                messageInput.value = '';
-            } catch (e) { alert(e.code === 'unavailable' ? "Failed to send. Check connection." : "Error: " + e.message); }
+    e.preventDefault();
+    const text = messageInput.value.trim();
+    if (!text || !currentChatId) return;
+    if (!isOnline) { 
+        alert("You are offline. Message will be sent when connection is restored."); 
+        return; 
+    }
+    
+    // Disable send button to prevent double-clicking
+    sendBtn.disabled = true;
+    sendBtn.style.opacity = '0.5';
+    
+    try {
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        const senderName = userDoc.exists() ? userDoc.data().username : "User";
+        
+        // Use addDoc to auto-generate unique ID
+        await addDoc(collection(db, "chats", currentChatId, "messages"), {
+            type: 'text', 
+            text: text, 
+            senderId: currentUser.uid, 
+            senderName: senderName, 
+            timestamp: serverTimestamp()
         });
+        
+        updateDoc(doc(db, "chats", currentChatId), { 
+            [`typing.${currentUser.uid}`]: null 
+        }).catch(() => {});
+        
+        const chatRef = doc(db, "chats", currentChatId);
+        const chatSnap = await getDoc(chatRef);
+        const updates = {};
+        chatSnap.data().members.forEach(uid => { 
+            if (uid !== currentUser.uid) updates[`unreadCounts.${uid}`] = increment(1); 
+        });
+        await updateDoc(chatRef, updates);
+        
+        messageInput.value = '';
+    } catch (e) {
+        if (e.code === 'already-exists') {
+            // Document already exists - this is okay, just ignore
+            console.log('Message already sent');
+            messageInput.value = '';
+        } else if (e.code === 'unavailable') {
+            alert("Failed to send. Check your connection.");
+        } else {
+            alert("Error: " + e.message);
+        }
+    } finally {
+        // Re-enable send button
+        sendBtn.disabled = false;
+        sendBtn.style.opacity = '1';
+    }
+});
 
         newGroupBtn.onclick = () => showGroupModal();
         newDmBtn.onclick = () => showModal('Start 1-on-1', 'Enter exact Display Name', 'direct');
