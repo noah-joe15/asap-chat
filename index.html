@@ -49,12 +49,10 @@
 
         /* ============================================
            5 & 6. REFACTORED GALAXY & COSMIC DEPTH
-           (Clean, performant, layered starfield)
            ============================================ */
         #messages-container {
             position: relative;
             background-color: var(--deep-navy);
-            /* 3 layers of stars with different sizes/densities + subtle nebula glows */
             background-image:
                 radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.8), transparent 1px),
                 radial-gradient(1.5px 1.5px at 50% 50%, rgba(255,255,255,0.5), transparent 1.5px),
@@ -71,7 +69,6 @@
             100% { background-position: 150px 150px, -300px -300px, 600px 600px, 0 0, 0 0; }
         }
 
-        /* Cinematic vignette & subtle twinkling overlay */
         #messages-container::before {
             content: '';
             position: absolute;
@@ -106,7 +103,6 @@
 
         /* ============================================
            4. FLOATING EMPTY-CHAT EXPERIENCE
-           (No card, just floating in space)
            ============================================ */
         #empty-chat-msg {
             display: flex;
@@ -132,7 +128,6 @@
             filter: drop-shadow(0 0 12px rgba(0, 168, 132, 0.4));
         }
 
-        /* The breathing cosmic halo behind the icon */
         #empty-chat-msg::before {
             content: '';
             position: absolute;
@@ -186,7 +181,6 @@
             color: #ffffff;
         }
 
-        /* Glass capsule action buttons */
         .icon-btn {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -214,7 +208,6 @@
             transform: translateY(0) scale(0.95);
         }
 
-        /* Subtle red warning tint for logout */
         #logout-btn:hover {
             background: rgba(239, 68, 68, 0.1);
             border-color: rgba(239, 68, 68, 0.2);
@@ -250,7 +243,6 @@
             border-color: rgba(255, 255, 255, 0.05);
         }
 
-        /* Active chat: subtle glass gradient, ambient glow, breathing accent */
         .active-chat {
             background: linear-gradient(90deg, rgba(0, 168, 132, 0.08) 0%, rgba(0, 168, 132, 0.01) 100%) !important;
             border-color: rgba(0, 168, 132, 0.15) !important;
@@ -275,7 +267,6 @@
             50% { opacity: 1; box-shadow: 0 0 12px var(--primary-glow); }
         }
 
-        /* 8. Glass Sphere Avatars & LED Indicator */
         .chat-item .w-10 {
             background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
             border: 1px solid rgba(255,255,255,0.1);
@@ -400,6 +391,9 @@
             position: relative;
             z-index: 10;
             flex-shrink: 0;
+            display: none; /* Controlled by JS */
+            flex-direction: column;
+            gap: 8px;
         }
 
         #message-input {
@@ -640,7 +634,6 @@
                 font-size: 16px;
             }
 
-            /* Reduce blur on mobile for performance */
             .glass-header, .glass-sidebar, #input-area, .glass-card {
                 backdrop-filter: blur(20px) saturate(150%);
                 -webkit-backdrop-filter: blur(20px) saturate(150%);
@@ -673,7 +666,6 @@
             }
         }
 
-        /* Respect reduced motion preferences */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -682,12 +674,10 @@
             }
         }
 
-        /* Smooth transitions for all interactive elements */
         a, button, input, select, textarea {
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* Custom text selection */
         ::selection {
             background: rgba(0, 168, 132, 0.3);
             color: white;
@@ -696,54 +686,9 @@
             background: rgba(0, 168, 132, 0.3);
             color: white;
         }
-/* ============================================
-   CRITICAL FIX: FORCE INPUT AREA VISIBLE
-   ============================================ */
-#input-area {
-    display: flex !important;
-    flex-direction: column;
-    gap: 8px;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-#input-area.hidden {
-    display: flex !important; /* Override Tailwind hidden */
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-#voice-controls {
-    display: flex !important;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    visibility: visible !important;
-}
-
-#mic-btn, #send-btn, #cancel-rec-btn {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-#message-input {
-    display: block !important;
-    flex: 1;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-#typing-indicator {
-    display: block !important;
-    visibility: visible !important;
-}
     </style>
 </head>
 <body>
-    <!-- STEP 2: Load the standalone loading manager script FIRST -->
     <script src="loading.js"></script>
 
     <div class="blob blob-1"></div>
@@ -794,12 +739,14 @@
             </aside>
 
             <main class="flex-1 flex flex-col relative" style="min-height: 0; overflow: hidden;">
-                <div id="chat-header" class="glass-header p-4 font-semibold text-lg text-white hidden border-b border-white/10"></div>
+                <!-- REMOVED 'hidden' class, using inline style controlled by JS -->
+                <div id="chat-header" class="glass-header p-4 font-semibold text-lg text-white border-b border-white/10" style="display: none;"></div>
                 <div id="messages-container" class="flex-1 overflow-y-auto p-4 chat-container flex flex-col gap-2" style="min-height: 0;">
                     <p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging<br><span class="text-sm">Use the + button to find someone by their exact username</span></p>
                 </div>
-                <div id="input-area" class="glass-header p-4 hidden border-t border-white/10">
-                    <div id="typing-indicator" class="typing-indicator"></div>
+                <!-- REMOVED 'hidden' class, using inline style controlled by JS -->
+                <div id="input-area" class="glass-header p-4 border-t border-white/10">
+                    <div id="typing-indicator" class="typing-indicator" style="display: none;"></div>
                     <div id="voice-controls" class="voice-controls">
                         <button id="mic-btn" class="mic-btn" title="Record Voice Note"><i class="fa-solid fa-microphone"></i></button>
                         <span id="recording-timer" class="recording-timer">0:00</span>
@@ -856,7 +803,6 @@
         let isOnline = navigator.onLine;
         let chatsLoaded = false;
 
-        // DOM Elements
         const loginScreen = document.getElementById('login-screen');
         const appScreen = document.getElementById('app-screen');
         const sidebar = document.getElementById('sidebar');
@@ -897,7 +843,6 @@
         let recordingSeconds = 0;
         const MAX_RECORDING_SECONDS = 30;
 
-        // STEP 3: Wrap all initialization logic to wait for the loading manager to finish
         window.addEventListener('appReady', () => {
             function setVH() {
                 let vh = window.innerHeight * 0.01;
@@ -907,7 +852,6 @@
             window.addEventListener('resize', setVH);
             window.addEventListener('orientationchange', () => setTimeout(setVH, 100));
 
-            // Update Checker
             if (localStorage.getItem('appVersion') !== APP_VERSION) {
                 updateBanner.classList.add('show');
                 updateMessage.innerHTML = '🎉 <strong>New Update!</strong> Voice notes added & duplicates fixed. <button id="refresh-app-btn" class="update-btn">Refresh Now</button>';
@@ -1047,9 +991,14 @@
 
             function toggleChat(chatId, name) {
                 if (currentChatId === chatId) {
-                    currentChatId = null; chatHeader.classList.add('hidden'); inputArea.classList.add('hidden'); typingIndicator.style.display = 'none';
+                    currentChatId = null; 
+                    // DIRECT INLINE STYLE CONTROL (BULLETPROOF)
+                    chatHeader.style.display = 'none'; 
+                    inputArea.style.display = 'none'; 
+                    typingIndicator.style.display = 'none';
                     emptyChatMsg.classList.remove('hidden');
                     messagesContainer.innerHTML = '<p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging</p>';
+                    loadChats();
                     if (unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
                     if (unsubscribeTyping) { unsubscribeTyping(); unsubscribeTyping = null; }
                 } else { openChat(chatId, name); }
@@ -1057,8 +1006,12 @@
 
             async function openChat(chatId, name) {
                 currentChatId = chatId;
-                chatHeader.textContent = name; chatHeader.classList.remove('hidden'); inputArea.classList.remove('hidden');
+                chatHeader.textContent = name; 
+                // DIRECT INLINE STYLE CONTROL (BULLETPROOF)
+                chatHeader.style.display = 'flex'; 
+                inputArea.style.display = 'flex'; 
                 emptyChatMsg.classList.add('hidden');
+                
                 const chatRef = doc(db, "chats", chatId);
                 await updateDoc(chatRef, { [`unreadCounts.${currentUser.uid}`]: 0 });
                 if (unsubscribeMessages) unsubscribeMessages();
