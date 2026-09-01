@@ -4,19 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASAP Chat</title>
-    <!-- FontAwesome for Smart Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tailwind for base layout -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        /* CSS Variables for Dynamic Color Changing */
         :root {
-            --primary-color: #00a884; /* Default WhatsApp Green */
+            --primary-color: #00a884;
             --primary-hover: #008f6f;
         }
 
-        /* --- LIQUID MORPHISM BASE --- */
         body {
             margin: 0;
             padding: 0;
@@ -27,7 +23,6 @@
             color: white;
         }
 
-        /* Animated Liquid Blobs in Background */
         .blob {
             position: absolute;
             border-radius: 50%;
@@ -54,7 +49,6 @@
             100% { transform: translate(50px, 50px) scale(1.1); }
         }
 
-        /* --- GLASSMORPHISM PANELS --- */
         .glass-panel, .glass-header, .glass-sidebar, .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
@@ -70,7 +64,6 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        /* --- INPUTS & BUTTONS --- */
         .glass-input {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -80,7 +73,6 @@
         .glass-input:focus {
             background: rgba(255, 255, 255, 0.15);
             border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         .btn-primary {
@@ -119,13 +111,13 @@
             transform: scale(1.1);
         }
 
-        /* --- CHAT ITEMS & BUBBLES --- */
         .chat-item {
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid transparent;
         }
         .chat-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.08);
         }
         .active-chat {
             background: rgba(255, 255, 255, 0.15) !important;
@@ -138,6 +130,12 @@
             font-size: 15px;
             line-height: 1.4;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            animation: slideUpFade 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(15px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .received {
@@ -145,6 +143,17 @@
             color: #1a1a2e;
             align-self: flex-start;
             border-radius: 18px 18px 18px 4px;
+            position: relative;
+        }
+        .received::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -6px;
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.85);
+            clip-path: polygon(0 0, 100% 100%, 0 100%);
         }
 
         .sent {
@@ -152,12 +161,69 @@
             color: white;
             align-self: flex-end;
             border-radius: 18px 18px 4px 18px;
+            position: relative;
+        }
+        .sent::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .user-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .user-checkbox:checked {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .user-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: -2px;
+            left: 2px;
+        }
+
+        .glass-header h1 {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
+        }
+
+        #message-input:focus {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 15px rgba(0, 168, 132, 0.2);
+            border-color: var(--primary-color);
         }
     </style>
 </head>
 <body>
 
-    <!-- Liquid Background Blobs -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
 
@@ -179,11 +245,9 @@
 
     <!-- MAIN APP SCREEN -->
     <div id="app-screen" class="hidden h-screen flex flex-col relative z-10">
-        <!-- Header -->
         <header class="glass-header p-4 flex justify-between items-center">
             <h1 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-bolt"></i> ASAP Chat</h1>
             <div class="flex gap-2 items-center">
-                <!-- Color Picker -->
                 <div class="flex items-center bg-white/20 rounded-full px-3 py-1 mr-2">
                     <i class="fa-solid fa-palette text-white text-sm mr-2"></i>
                     <input type="color" id="theme-color-picker" value="#00a884" class="w-6 h-6 rounded-full cursor-pointer border-none bg-transparent">
@@ -195,17 +259,23 @@
         </header>
 
         <div class="flex flex-1 overflow-hidden">
-            <!-- Sidebar: Chats List -->
             <aside class="w-1/3 glass-sidebar overflow-y-auto">
+                <div class="p-3 border-b border-white/10 mb-2">
+                    <h3 class="text-sm font-semibold text-white/70 uppercase tracking-wider"><i class="fa-solid fa-comments mr-2"></i>Your Chats</h3>
+                </div>
                 <div id="chats-list" class="p-3"></div>
+                
+                <div class="p-3 border-b border-white/10 mb-2 mt-4">
+                    <h3 class="text-sm font-semibold text-white/70 uppercase tracking-wider"><i class="fa-solid fa-users mr-2"></i>All Users</h3>
+                </div>
+                <div id="users-list" class="p-3"></div>
             </aside>
 
-            <!-- Main: Chat Window -->
             <main class="flex-1 flex flex-col relative">
                 <div id="chat-header" class="glass-header p-4 font-semibold text-lg text-white hidden border-b border-white/10"></div>
                 
                 <div id="messages-container" class="flex-1 overflow-y-auto p-4 chat-container flex flex-col gap-2">
-                    <p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging</p>
+                    <p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging<br><span class="text-sm">Or click the same chat again to close it</span></p>
                 </div>
 
                 <div id="input-area" class="glass-header p-4 hidden border-t border-white/10">
@@ -220,9 +290,11 @@
 
     <!-- MODAL FOR CREATING CHATS -->
     <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="glass-card p-6 rounded-3xl w-80">
+        <div class="glass-card p-6 rounded-3xl w-96 max-h-[80vh] overflow-y-auto">
             <h2 id="modal-title" class="text-xl font-bold mb-4 text-white"></h2>
-            <input id="modal-input" type="text" class="glass-input w-full p-3 rounded-xl mb-4 text-white placeholder-gray-300" placeholder="">
+            <div id="modal-content">
+                <input id="modal-input" type="text" class="glass-input w-full p-3 rounded-xl mb-4 text-white placeholder-gray-300" placeholder="">
+            </div>
             <div class="flex justify-end gap-3">
                 <button id="modal-cancel" class="px-4 py-2 text-white/70 hover:text-white">Cancel</button>
                 <button id="modal-save" class="btn-primary px-6 py-2 rounded-xl text-white font-semibold">Create</button>
@@ -250,10 +322,11 @@
 
         let currentUser = null;
         let currentChatId = null;
+        let allUsers = [];
         let unsubscribeChats = null;
         let unsubscribeMessages = null;
+        let unsubscribeUsers = null;
 
-        // UI Elements
         const loginScreen = document.getElementById('login-screen');
         const appScreen = document.getElementById('app-screen');
         const emailInput = document.getElementById('email-input');
@@ -265,6 +338,7 @@
         const colorPicker = document.getElementById('theme-color-picker');
         
         const chatsList = document.getElementById('chats-list');
+        const usersList = document.getElementById('users-list');
         const chatHeader = document.getElementById('chat-header');
         const messagesContainer = document.getElementById('messages-container');
         const emptyChatMsg = document.getElementById('empty-chat-msg');
@@ -273,9 +347,9 @@
         const messageInput = document.getElementById('message-input');
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
         const modalInput = document.getElementById('modal-input');
 
-        // --- COLOR PICKER LOGIC ---
         const savedColor = localStorage.getItem('chatThemeColor');
         if (savedColor) {
             document.documentElement.style.setProperty('--primary-color', savedColor);
@@ -292,6 +366,7 @@
             loginScreen.classList.add('hidden');
             appScreen.classList.remove('hidden');
             loadChats();
+            loadAllUsers();
         }
 
         signupBtn.onclick = async () => {
@@ -322,6 +397,7 @@
                 loginScreen.classList.remove('hidden');
                 if (unsubscribeChats) unsubscribeChats();
                 if (unsubscribeMessages) unsubscribeMessages();
+                if (unsubscribeUsers) unsubscribeUsers();
             });
         };
 
@@ -330,32 +406,106 @@
             const q = query(collection(db, "chats"), where("members", "array-contains", currentUser.uid));
             unsubscribeChats = onSnapshot(q, async (snapshot) => {
                 chatsList.innerHTML = '';
+                if (snapshot.empty) {
+                    chatsList.innerHTML = '<p class="text-white/40 text-sm text-center p-3">No chats yet</p>';
+                }
                 const chatPromises = snapshot.docs.map(async (docSnap) => {
                     const data = docSnap.data();
                     let displayName = data.name;
+                    let icon = 'fa-user';
+                    
                     if (data.type === 'direct') {
                         const otherUid = data.members.find(m => m !== currentUser.uid);
                         const otherUserDoc = await getDoc(doc(db, "users", otherUid));
                         displayName = otherUserDoc.exists() ? otherUserDoc.data().username : "Unknown";
+                        icon = 'fa-user';
+                    } else {
+                        icon = 'fa-users';
                     }
+
                     const div = document.createElement('div');
                     div.className = `chat-item p-3 rounded-xl mb-2 cursor-pointer ${currentChatId === docSnap.id ? 'active-chat' : ''}`;
                     div.innerHTML = `
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg">
-                                ${displayName.charAt(0).toUpperCase()}
+                                <i class="fa-solid ${icon}"></i>
                             </div>
-                            <div>
-                                <div class="font-semibold text-white">${displayName}</div>
-                                <div class="text-xs text-white/60">${data.type === 'group' ? '<i class="fa-solid fa-users mr-1"></i>Group' : '<i class="fa-solid fa-user mr-1"></i>Direct'}</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold text-white truncate">${displayName}</div>
+                                <div class="text-xs text-white/60">${data.type === 'group' ? 'Group Chat' : 'Direct Message'}</div>
                             </div>
                         </div>
                     `;
-                    div.onclick = () => openChat(docSnap.id, displayName);
+                    div.onclick = () => toggleChat(docSnap.id, displayName);
                     chatsList.appendChild(div);
                 });
                 await Promise.all(chatPromises);
             });
+        }
+
+        function loadAllUsers() {
+            if (unsubscribeUsers) unsubscribeUsers();
+            const q = query(collection(db, "users"));
+            unsubscribeUsers = onSnapshot(q, (snapshot) => {
+                allUsers = [];
+                usersList.innerHTML = '';
+                snapshot.forEach((docSnap) => {
+                    const userData = docSnap.data();
+                    if (docSnap.id !== currentUser.uid) {
+                        allUsers.push({ id: docSnap.id, ...userData });
+                        const div = document.createElement('div');
+                        div.className = 'chat-item p-3 rounded-xl mb-2 cursor-pointer flex items-center gap-3';
+                        div.innerHTML = `
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                                ${userData.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-semibold text-white">${userData.username}</div>
+                                <div class="text-xs text-white/60">Click to start chat</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-white/40"></i>
+                        `;
+                        div.onclick = () => startDirectChat(docSnap.id, userData.username);
+                        usersList.appendChild(div);
+                    }
+                });
+                if (allUsers.length === 0) {
+                    usersList.innerHTML = '<p class="text-white/40 text-sm text-center p-3">No other users yet</p>';
+                }
+            });
+        }
+
+        async function startDirectChat(otherUserId, otherUserName) {
+            const chatId = [currentUser.uid, otherUserId].sort().join('_');
+            const chatRef = doc(db, "chats", chatId);
+            const chatSnap = await getDoc(chatRef);
+            
+            if (!chatSnap.exists()) {
+                await setDoc(chatRef, {
+                    type: 'direct',
+                    members: [currentUser.uid, otherUserId],
+                    createdAt: serverTimestamp()
+                });
+            }
+            toggleChat(chatId, otherUserName);
+        }
+
+        function toggleChat(chatId, name) {
+            if (currentChatId === chatId) {
+                // Close the chat if clicking the same one
+                currentChatId = null;
+                chatHeader.classList.add('hidden');
+                inputArea.classList.add('hidden');
+                emptyChatMsg.classList.remove('hidden');
+                messagesContainer.innerHTML = '<p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging<br><span class="text-sm">Or click the same chat again to close it</span></p>';
+                loadChats();
+                if (unsubscribeMessages) {
+                    unsubscribeMessages();
+                    unsubscribeMessages = null;
+                }
+            } else {
+                openChat(chatId, name);
+            }
         }
 
         function openChat(chatId, name) {
@@ -365,8 +515,10 @@
             inputArea.classList.remove('hidden');
             emptyChatMsg.classList.add('hidden');
             loadChats();
+
             if (unsubscribeMessages) unsubscribeMessages();
             messagesContainer.innerHTML = '';
+
             const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
             unsubscribeMessages = onSnapshot(q, (snapshot) => {
                 messagesContainer.innerHTML = '';
@@ -397,15 +549,57 @@
             messageInput.value = '';
         };
 
-        document.getElementById('new-group-btn').onclick = () => showModal('Create Group', 'Enter Group Name', 'group');
+        document.getElementById('new-group-btn').onclick = () => showGroupModal();
         document.getElementById('new-dm-btn').onclick = () => showModal('Start 1-on-1', 'Enter exact Display Name', 'direct');
         document.getElementById('modal-cancel').onclick = () => modal.classList.add('hidden');
 
+        function showGroupModal() {
+            modalTitle.textContent = 'Create Group';
+            modalContent.innerHTML = `
+                <input id="group-name-input" type="text" class="glass-input w-full p-3 rounded-xl mb-4 text-white placeholder-gray-300" placeholder="Enter Group Name">
+                <h3 class="text-white font-semibold mb-3 text-sm">Select Members:</h3>
+                <div id="member-selection" class="max-h-48 overflow-y-auto space-y-2 mb-4"></div>
+            `;
+            
+            const memberSelection = document.getElementById('member-selection');
+            allUsers.forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3 p-2 rounded-lg hover:bg-white/5';
+                div.innerHTML = `
+                    <input type="checkbox" class="user-checkbox member-checkbox" value="${user.id}" data-name="${user.username}">
+                    <div class="flex-1">
+                        <div class="text-white text-sm">${user.username}</div>
+                    </div>
+                `;
+                memberSelection.appendChild(div);
+            });
+
+            modal.classList.remove('hidden');
+
+            document.getElementById('modal-save').onclick = async () => {
+                const groupName = document.getElementById('group-name-input').value.trim();
+                const selectedMembers = Array.from(document.querySelectorAll('.member-checkbox:checked')).map(cb => cb.value);
+                
+                if (!groupName) return alert("Please enter a group name");
+                if (selectedMembers.length === 0) return alert("Please select at least one member");
+
+                const members = [currentUser.uid, ...selectedMembers];
+                await addDoc(collection(db, "chats"), {
+                    name: groupName,
+                    type: 'group',
+                    members: members,
+                    createdAt: serverTimestamp()
+                });
+                modal.classList.add('hidden');
+            };
+        }
+
         function showModal(title, placeholder, type) {
             modalTitle.textContent = title;
-            modalInput.placeholder = placeholder;
-            modalInput.value = '';
+            modalContent.innerHTML = `<input id="modal-input" type="text" class="glass-input w-full p-3 rounded-xl mb-4 text-white placeholder-gray-300" placeholder="${placeholder}">`;
+            modalInput = document.getElementById('modal-input');
             modal.classList.remove('hidden');
+            
             document.getElementById('modal-save').onclick = async () => {
                 const val = modalInput.value.trim();
                 if (!val) return;
