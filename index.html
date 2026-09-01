@@ -61,7 +61,6 @@
         .chat-item .w-10 { background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 2px 8px rgba(0,0,0,0.2); flex-shrink: 0; }
         .chat-item .w-10::after { content: ''; position: absolute; bottom: 2px; right: 2px; width: 8px; height: 8px; background: #10b981; border-radius: 50%; border: 2px solid rgba(10, 14, 39, 0.8); box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); }
 
-        /* UNREAD BADGE STYLES */
         .unread-badge {
             background: #ef4444;
             color: white;
@@ -87,11 +86,44 @@
         .sent { background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); color: white; align-self: flex-end; border-radius: 18px 18px 4px 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 4px 20px rgba(0, 168, 132, 0.3), 0 0 30px rgba(0, 168, 132, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2); position: relative; }
         .sent::after { content: ''; position: absolute; bottom: 0; right: -6px; width: 12px; height: 12px; background: var(--primary-color); clip-path: polygon(100% 0, 100% 100%, 0 100%); }
 
-        #input-area { background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(40px) saturate(200%); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 16px 24px; box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3); }
-        #message-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 14px 24px; color: #e8eaf0; font-size: 15px; transition: all 0.3s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); width: 100%; }
+        #input-area { 
+            background: rgba(10, 14, 39, 0.8); 
+            backdrop-filter: blur(40px) saturate(200%); 
+            border-top: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 16px 24px; 
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+        #message-input { 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 24px; 
+            padding: 14px 24px; 
+            color: #e8eaf0; 
+            font-size: 15px; 
+            transition: all 0.3s ease; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); 
+            width: 100%;
+            min-height: 48px;
+        }
         #message-input:focus { outline: none; background: rgba(255, 255, 255, 0.08); border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1), 0 0 20px rgba(0, 168, 132, 0.15); }
         #message-input::placeholder { color: rgba(255, 255, 255, 0.4); }
-        #message-form button[type="submit"] { background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); border: none; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0, 168, 132, 0.4); flex-shrink: 0; }
+        #message-form { display: flex; gap: 12px; align-items: center; }
+        #message-form button[type="submit"] { 
+            background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); 
+            border: none; 
+            border-radius: 50%; 
+            width: 52px; 
+            height: 52px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 4px 15px rgba(0, 168, 132, 0.4); 
+            flex-shrink: 0;
+        }
         #message-form button[type="submit"]:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 25px rgba(0, 168, 132, 0.5); }
         #message-form button[type="submit"]:active { transform: translateY(0) scale(0.95); }
 
@@ -126,33 +158,194 @@
         .user-item.hidden { display: none; }
         .highlight { background: rgba(0, 168, 132, 0.3); padding: 0 2px; border-radius: 2px; font-weight: 600; }
 
-        .sidebar-toggle { display: none; position: fixed; bottom: 80px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); border: none; color: white; font-size: 20px; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 168, 132, 0.4); z-index: 100; transition: all 0.3s; align-items: center; justify-content: center; }
-        .sidebar-toggle:hover { transform: scale(1.1); }
+        .sidebar-toggle { 
+            display: none; 
+            position: fixed; 
+            bottom: 90px; 
+            right: 20px; 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); 
+            border: none; 
+            color: white; 
+            font-size: 24px; 
+            cursor: pointer; 
+            box-shadow: 0 6px 24px rgba(0, 168, 132, 0.5); 
+            z-index: 100; 
+            transition: all 0.3s; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .sidebar-toggle:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(0, 168, 132, 0.6); }
+        .sidebar-toggle:active { transform: scale(0.95); }
 
-        @media (max-width: 767px) {
+        /* ============================================
+           MOBILE RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            /* Show sidebar toggle */
             .sidebar-toggle { display: flex; }
-            aside { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: none; }
+            
+            /* Sidebar is full-screen overlay on mobile */
+            aside { 
+                position: fixed; 
+                top: 0; 
+                left: 0; 
+                width: 100%; 
+                height: 100%; 
+                z-index: 50; 
+                transform: translateX(-100%); 
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+                border-right: none;
+                box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+            }
             aside.sidebar-open { transform: translateX(0); }
+            
+            /* Main content takes full width */
+            .flex.flex-1 { display: flex; }
+            main { 
+                width: 100%; 
+                flex: 1;
+            }
+            
+            /* Header adjustments */
             .glass-header { padding: 12px 16px; }
             .glass-header h1 { font-size: 1.1rem; }
-            .icon-btn { width: 32px; height: 32px; }
-            main { width: 100%; }
-            .msg-bubble { max-width: 85%; font-size: 14px; padding: 10px 14px; }
-            #input-area { padding: 12px 16px; }
-            #message-input { padding: 12px 18px; font-size: 14px; }
-            #message-form button[type="submit"] { width: 44px; height: 44px; }
-            .glass-card { width: 90%; max-width: 360px; padding: 24px; }
-            #modal .glass-card { width: 90%; max-width: 360px; margin: 20px; }
-            input, textarea, select { font-size: 16px !important; }
+            .icon-btn { width: 36px; height: 36px; }
+            
+            /* Message bubbles */
+            .msg-bubble { 
+                max-width: 85%; 
+                font-size: 15px; 
+                padding: 12px 16px; 
+            }
+            
+            /* Input area - MORE SPACIOUS */
+            #input-area { 
+                padding: 16px 20px;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom));
+            }
+            #message-input { 
+                padding: 16px 20px; 
+                font-size: 16px; /* Prevents zoom on iOS */
+                min-height: 52px;
+            }
+            #message-form button[type="submit"] { 
+                width: 56px; 
+                height: 56px;
+                min-width: 56px;
+            }
+            #message-form button[type="submit"] i {
+                font-size: 20px;
+            }
+            
+            /* Chat header */
+            #chat-header {
+                padding: 14px 16px;
+                font-size: 1.1rem;
+            }
+            
+            /* Login screen */
+            .glass-card { 
+                width: 90%; 
+                max-width: 400px; 
+                padding: 32px 24px; 
+            }
+            .glass-card h1 { font-size: 1.75rem; }
+            
+            /* Modal */
+            #modal .glass-card { 
+                width: 90%; 
+                max-width: 400px; 
+                margin: 20px;
+                max-height: 85vh;
+            }
+            
+            /* Section headers in sidebar */
+            .p-3.border-b h3 {
+                font-size: 0.8rem;
+                padding: 8px 0;
+            }
+            
+            /* Chat items */
+            .chat-item {
+                padding: 14px;
+            }
+            .chat-item .w-10 {
+                width: 48px;
+                height: 48px;
+            }
+            
+            /* Search */
+            .search-input {
+                padding: 12px 12px 12px 42px;
+                font-size: 16px;
+            }
+            
+            /* Prevent zoom on input focus */
+            input, textarea, select { 
+                font-size: 16px !important; 
+            }
+            
+            /* Better spacing for empty state */
+            #empty-chat-msg {
+                padding: 20px;
+                font-size: 16px;
+            }
         }
-        @media (max-width: 479px) {
+
+        /* Small Mobile */
+        @media (max-width: 480px) {
             .glass-header { padding: 10px 12px; }
             .glass-header h1 { font-size: 1rem; }
-            .icon-btn { width: 30px; height: 30px; }
-            .msg-bubble { max-width: 90%; font-size: 13px; padding: 8px 12px; }
-            #input-area { padding: 10px 12px; }
-            #message-input { padding: 10px 16px; font-size: 13px; }
-            #message-form button[type="submit"] { width: 40px; height: 40px; }
+            .icon-btn { width: 32px; height: 32px; }
+            
+            .msg-bubble { 
+                max-width: 90%; 
+                font-size: 14px; 
+                padding: 10px 14px; 
+            }
+            
+            #input-area { padding: 14px 16px; }
+            #message-input { 
+                padding: 14px 18px; 
+                font-size: 16px;
+                min-height: 48px;
+            }
+            #message-form button[type="submit"] { 
+                width: 52px; 
+                height: 52px;
+                min-width: 52px;
+            }
+            
+            .sidebar-toggle {
+                width: 56px;
+                height: 56px;
+                bottom: 85px;
+                right: 16px;
+            }
+            
+            .chat-item { padding: 12px; }
+            .chat-item .w-10 { width: 44px; height: 44px; }
+        }
+
+        /* Landscape mode */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .glass-header { padding: 8px 16px; }
+            #input-area { padding: 10px 16px; }
+            .msg-bubble { padding: 8px 12px; }
+            #message-form button[type="submit"] { width: 44px; height: 44px; }
+        }
+
+        /* Safe area for notched phones */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            #input-area {
+                padding-bottom: calc(16px + env(safe-area-inset-bottom));
+            }
+            .sidebar-toggle {
+                bottom: calc(90px + env(safe-area-inset-bottom));
+            }
         }
     </style>
 </head>
@@ -355,7 +548,6 @@
                         displayName = otherUserDoc.exists() ? otherUserDoc.data().username : "Unknown";
                     } else { icon = 'fa-users'; }
 
-                    // Calculate Unread Count
                     const unreadCount = data.unreadCounts?.[currentUser.uid] || 0;
                     const badgeHtml = unreadCount > 0 ? `<div class="unread-badge">${unreadCount > 99 ? '99+' : unreadCount}</div>` : '';
 
@@ -460,7 +652,6 @@
             chatHeader.textContent = name; chatHeader.classList.remove('hidden'); inputArea.classList.remove('hidden');
             emptyChatMsg.classList.add('hidden'); loadChats();
 
-            // Reset unread count for current user
             const chatRef = doc(db, "chats", chatId);
             await updateDoc(chatRef, { [`unreadCounts.${currentUser.uid}`]: 0 });
 
@@ -489,12 +680,10 @@
             const userDoc = await getDoc(doc(db, "users", currentUser.uid));
             const senderName = userDoc.exists() ? userDoc.data().username : "User";
 
-            // 1. Add the message
             await addDoc(collection(db, "chats", currentChatId, "messages"), {
                 text: text, senderId: currentUser.uid, senderName: senderName, timestamp: serverTimestamp()
             });
 
-            // 2. Increment unread count for all OTHER members in the chat
             const chatRef = doc(db, "chats", currentChatId);
             const chatSnap = await getDoc(chatRef);
             const members = chatSnap.data().members;
