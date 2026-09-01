@@ -106,6 +106,41 @@
 
         .typing-indicator { font-size: 12px; color: var(--primary-color); font-style: italic; padding: 4px 16px; min-height: 20px; opacity: 0.8; display: none; }
 
+        /* NEW: Connection Status Banner */
+        .connection-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .connection-banner.show { transform: translateY(0); }
+        .connection-banner.offline {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+        .connection-banner.error {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        .connection-banner.online {
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
         #input-area { 
             background: rgba(10, 14, 39, 0.95); 
             backdrop-filter: blur(40px) saturate(200%); 
@@ -202,135 +237,44 @@
         }
         .sidebar-toggle:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(0, 168, 132, 0.6); }
 
-        /* ============================================
-           MOBILE LAYOUT FIXES
-           ============================================ */
         @media (max-width: 768px) {
-            /* Show sidebar toggle */
             .sidebar-toggle { display: flex; }
-            
-            /* Sidebar is completely hidden off-screen by default */
             aside { 
-                position: fixed; 
-                top: 0; 
-                left: 0; 
-                width: 100%; 
-                height: 100%; 
-                z-index: 50; 
-                transform: translateX(-100%); 
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-                border-right: none;
-                box-shadow: 4px 0 24px rgba(0,0,0,0.3);
-                overflow-y: auto;
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; 
+                transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+                border-right: none; box-shadow: 4px 0 24px rgba(0,0,0,0.3); overflow-y: auto;
             }
             aside.sidebar-open { transform: translateX(0); }
-            
-            /* Main content takes full width */
-            .flex.flex-1 { 
-                display: flex; 
-                flex-direction: column;
-                width: 100%;
-                height: 100%;
-            }
-            main { 
-                width: 100%; 
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                min-height: 0;
-            }
-            
-            /* Header adjustments */
-            .glass-header { padding: 12px 16px; }
-            .glass-header h1 { font-size: 1.1rem; }
-            .icon-btn { width: 36px; height: 36px; }
-            
-            /* Message bubbles */
+            .flex.flex-1 { display: flex; flex-direction: column; width: 100%; height: 100%; }
+            main { width: 100%; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+            .glass-header { padding: 12px 16px; } .glass-header h1 { font-size: 1.1rem; } .icon-btn { width: 36px; height: 36px; }
             .msg-bubble { max-width: 85%; font-size: 15px; padding: 12px 16px; }
-            
-            /* Input area - fixed at bottom */
-            #input-area { 
-                padding: 12px 16px;
-                padding-bottom: calc(12px + env(safe-area-inset-bottom));
-            }
-            #message-input { 
-                padding: 12px 18px; 
-                font-size: 16px;
-                min-height: 44px;
-            }
-            #message-form button[type="submit"] { 
-                width: 48px; 
-                height: 48px;
-                min-width: 48px;
-            }
-            
-            /* Chat header */
-            #chat-header {
-                padding: 12px 16px;
-                font-size: 1.1rem;
-                flex-shrink: 0;
-            }
-            
-            /* Messages container */
-            #messages-container {
-                flex: 1;
-                min-height: 0;
-                overflow-y: auto;
-            }
-            
-            /* Login screen */
-            .glass-card { 
-                width: 90%; 
-                max-width: 400px; 
-                padding: 32px 24px; 
-            }
-            .glass-card h1 { font-size: 1.75rem; }
-            
-            /* Modal */
-            #modal .glass-card { 
-                width: 90%; 
-                max-width: 400px; 
-                margin: 20px;
-                max-height: 85vh;
-            }
-            
-            /* Chat items */
-            .chat-item { padding: 14px; }
-            .chat-item .w-10 { width: 48px; height: 48px; }
-            
-            /* Prevent zoom on input focus */
-            input, textarea, select { 
-                font-size: 16px !important; 
-            }
+            #input-area { padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+            #message-input { padding: 12px 18px; font-size: 16px; min-height: 44px; }
+            #message-form button[type="submit"] { width: 48px; height: 48px; min-width: 48px; }
+            #chat-header { padding: 12px 16px; font-size: 1.1rem; flex-shrink: 0; }
+            #messages-container { flex: 1; min-height: 0; overflow-y: auto; }
+            .glass-card { width: 90%; max-width: 400px; padding: 32px 24px; }
+            #modal .glass-card { width: 90%; max-width: 400px; margin: 20px; max-height: 85vh; }
+            .chat-item { padding: 14px; } .chat-item .w-10 { width: 48px; height: 48px; }
+            input, textarea, select { font-size: 16px !important; }
         }
 
         @media (max-width: 480px) {
-            .glass-header { padding: 10px 12px; }
-            .glass-header h1 { font-size: 1rem; }
-            .icon-btn { width: 32px; height: 32px; }
+            .glass-header { padding: 10px 12px; } .glass-header h1 { font-size: 1rem; } .icon-btn { width: 32px; height: 32px; }
             .msg-bubble { max-width: 90%; font-size: 14px; padding: 10px 14px; }
-            #input-area { padding: 10px 12px; }
-            #message-input { padding: 10px 16px; font-size: 16px; min-height: 42px; }
+            #input-area { padding: 10px 12px; } #message-input { padding: 10px 16px; font-size: 16px; min-height: 42px; }
             #message-form button[type="submit"] { width: 44px; height: 44px; min-width: 44px; }
             .sidebar-toggle { width: 52px; height: 52px; bottom: 75px; right: 12px; font-size: 20px; }
         }
 
-        /* Landscape mode */
         @media (max-height: 500px) and (orientation: landscape) {
-            .glass-header { padding: 8px 16px; }
-            #input-area { padding: 8px 16px; }
-            .msg-bubble { padding: 8px 12px; }
-            #message-form button[type="submit"] { width: 40px; height: 40px; }
+            .glass-header { padding: 8px 16px; } #input-area { padding: 8px 16px; } .msg-bubble { padding: 8px 12px; } #message-form button[type="submit"] { width: 40px; height: 40px; }
         }
 
-        /* Safe area for notched phones */
         @supports (padding: env(safe-area-inset-bottom)) {
-            #input-area {
-                padding-bottom: calc(12px + env(safe-area-inset-bottom));
-            }
-            .sidebar-toggle {
-                bottom: calc(80px + env(safe-area-inset-bottom));
-            }
+            #input-area { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+            .sidebar-toggle { bottom: calc(80px + env(safe-area-inset-bottom)); }
         }
     </style>
 </head>
@@ -338,6 +282,12 @@
 
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
+
+    <!-- NEW: Connection Status Banner -->
+    <div id="connection-banner" class="connection-banner">
+        <i class="fa-solid fa-wifi"></i>
+        <span id="connection-message">Connecting...</span>
+    </div>
 
     <!-- LOGIN SCREEN -->
     <div id="login-screen" class="glass-panel flex items-center justify-center h-screen fixed inset-0 z-50">
@@ -408,8 +358,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, getDoc, getDocs, updateDoc, increment, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, getDoc, getDocs, updateDoc, increment, deleteDoc, enableNetwork, disableNetwork } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCEMqKLVJnjEwTGe3XKGzsVZqrrr2gU4xg",
@@ -433,6 +383,7 @@
         let unsubscribeChats = null;
         let unsubscribeMessages = null;
         let unsubscribeTyping = null;
+        let isOnline = navigator.onLine;
 
         const loginScreen = document.getElementById('login-screen');
         const appScreen = document.getElementById('app-screen');
@@ -456,6 +407,49 @@
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modal-title');
         const modalContent = document.getElementById('modal-content');
+        const connectionBanner = document.getElementById('connection-banner');
+        const connectionMessage = document.getElementById('connection-message');
+
+        // --- NEW: Connection Status Monitoring ---
+        function updateConnectionStatus(online) {
+            isOnline = online;
+            if (online) {
+                connectionBanner.className = 'connection-banner online show';
+                connectionMessage.textContent = 'Connected';
+                setTimeout(() => connectionBanner.classList.remove('show'), 2000);
+            } else {
+                connectionBanner.className = 'connection-banner offline show';
+                connectionMessage.textContent = 'No Internet Connection - Messages will sync when back online';
+            }
+        }
+
+        window.addEventListener('online', () => updateConnectionStatus(true));
+        window.addEventListener('offline', () => updateConnectionStatus(false));
+
+        // Initial check
+        if (!navigator.onLine) {
+            updateConnectionStatus(false);
+        }
+
+        // --- NEW: Firebase Error Handling ---
+        // Listen for Firestore connection state
+        import { onSnapshotsInSync } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        
+        let hasShownError = false;
+        onSnapshotsInSync(db, () => {
+            hasShownError = false;
+        });
+
+        // Global error handler for Firebase
+        window.addEventListener('unhandledrejection', (event) => {
+            if (event.reason?.code === 'unavailable' || event.reason?.message?.includes('ERR_PROXY')) {
+                if (!hasShownError) {
+                    hasShownError = true;
+                    connectionBanner.className = 'connection-banner error show';
+                    connectionMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Connection failed. Check proxy/VPN settings.';
+                }
+            }
+        });
 
         sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('sidebar-open'));
         document.addEventListener('click', (e) => {
@@ -471,12 +465,19 @@
             localStorage.setItem('chatThemeColor', e.target.value);
         });
 
-        function showApp(user) {
-            currentUser = user;
-            loginScreen.classList.add('hidden');
-            appScreen.classList.remove('hidden');
-            loadChats();
-        }
+        // --- PERSISTENT LOGIN CHECK ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loginScreen.classList.add('hidden');
+                appScreen.classList.remove('hidden');
+                loadChats();
+            } else {
+                currentUser = null;
+                loginScreen.classList.remove('hidden');
+                appScreen.classList.add('hidden');
+            }
+        });
 
         signupBtn.onclick = async () => {
             const email = emailInput.value.trim(), password = passwordInput.value.trim(), name = usernameInput.value.trim();
@@ -484,22 +485,31 @@
             try {
                 const userCred = await createUserWithEmailAndPassword(auth, email, password);
                 await setDoc(doc(db, "users", userCred.user.uid), { username: name, email: email, createdAt: serverTimestamp() });
-                showApp(userCred.user);
-            } catch (e) { alert("Sign Up Error: " + e.message); }
+            } catch (e) { 
+                if (e.code === 'auth/network-request-failed') {
+                    alert("Network error. Please check your connection or disable proxy/VPN.");
+                } else {
+                    alert("Sign Up Error: " + e.message); 
+                }
+            }
         };
 
         loginBtn.onclick = async () => {
             const email = emailInput.value.trim(), password = passwordInput.value.trim();
             if (!email || !password) return alert("Please enter email and password.");
             try {
-                const userCred = await signInWithEmailAndPassword(auth, email, password);
-                showApp(userCred.user);
-            } catch (e) { alert("Login Error: " + e.message); }
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (e) { 
+                if (e.code === 'auth/network-request-failed') {
+                    alert("Network error. Please check your connection or disable proxy/VPN.");
+                } else {
+                    alert("Login Error: " + e.message); 
+                }
+            }
         };
 
         logoutBtn.onclick = () => {
             signOut(auth).then(() => {
-                appScreen.classList.add('hidden'); loginScreen.classList.remove('hidden');
                 if (unsubscribeChats) unsubscribeChats();
                 if (unsubscribeMessages) unsubscribeMessages();
                 if (unsubscribeTyping) unsubscribeTyping();
@@ -574,6 +584,13 @@
                     chatsList.appendChild(div);
                 });
                 await Promise.all(chatPromises);
+            }, (error) => {
+                // Handle Firestore errors gracefully
+                console.error("Chat load error:", error);
+                if (error.code === 'unavailable' || error.message?.includes('proxy')) {
+                    connectionBanner.className = 'connection-banner error show';
+                    connectionMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Connection failed. Check proxy/VPN settings.';
+                }
             });
         }
 
@@ -598,13 +615,13 @@
 
             if (unsubscribeMessages) unsubscribeMessages();
             if (unsubscribeTyping) unsubscribeTyping();
-            messagesContainer.innerHTML = '';
             
             const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
             let isInitialMessageLoad = true;
 
-            unsubscribeMessages = onSnapshot(q, (snapshot) => {
+            unsubscribeMessages = onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
                 if (isInitialMessageLoad) {
+                    messagesContainer.innerHTML = '';
                     snapshot.forEach((docSnap) => renderMessage(docSnap));
                     isInitialMessageLoad = false;
                 } else {
@@ -620,6 +637,12 @@
                     });
                 }
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, (error) => {
+                console.error("Message load error:", error);
+                if (error.code === 'unavailable' || error.message?.includes('proxy')) {
+                    connectionBanner.className = 'connection-banner error show';
+                    connectionMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Connection failed. Check proxy/VPN settings.';
+                }
             });
 
             unsubscribeTyping = onSnapshot(chatRef, (docSnap) => {
@@ -674,7 +697,11 @@
             if (deleteBtn && currentChatId) {
                 const msgId = deleteBtn.dataset.id;
                 if(confirm("Delete this message?")) {
-                    await deleteDoc(doc(db, "chats", currentChatId, "messages", msgId));
+                    try {
+                        await deleteDoc(doc(db, "chats", currentChatId, "messages", msgId));
+                    } catch (e) {
+                        alert("Failed to delete. Check your connection.");
+                    }
                 }
             }
         });
@@ -695,26 +722,39 @@
             const text = messageInput.value.trim();
             if (!text || !currentChatId) return;
             
-            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-            const senderName = userDoc.exists() ? userDoc.data().username : "User";
+            if (!isOnline) {
+                alert("You are offline. Message will be sent when connection is restored.");
+                return;
+            }
 
-            await addDoc(collection(db, "chats", currentChatId, "messages"), {
-                text: text, senderId: currentUser.uid, senderName: senderName, timestamp: serverTimestamp()
-            });
+            try {
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                const senderName = userDoc.exists() ? userDoc.data().username : "User";
 
-            updateDoc(doc(db, "chats", currentChatId), {
-                [`typing.${currentUser.uid}`]: null
-            }).catch(() => {});
+                await addDoc(collection(db, "chats", currentChatId, "messages"), {
+                    text: text, senderId: currentUser.uid, senderName: senderName, timestamp: serverTimestamp()
+                });
 
-            const chatRef = doc(db, "chats", currentChatId);
-            const chatSnap = await getDoc(chatRef);
-            const members = chatSnap.data().members;
-            const updates = {};
-            members.forEach(uid => {
-                if (uid !== currentUser.uid) updates[`unreadCounts.${uid}`] = increment(1);
-            });
-            await updateDoc(chatRef, updates);
-            messageInput.value = '';
+                updateDoc(doc(db, "chats", currentChatId), {
+                    [`typing.${currentUser.uid}`]: null
+                }).catch(() => {});
+
+                const chatRef = doc(db, "chats", currentChatId);
+                const chatSnap = await getDoc(chatRef);
+                const members = chatSnap.data().members;
+                const updates = {};
+                members.forEach(uid => {
+                    if (uid !== currentUser.uid) updates[`unreadCounts.${uid}`] = increment(1);
+                });
+                await updateDoc(chatRef, updates);
+                messageInput.value = '';
+            } catch (e) {
+                if (e.code === 'unavailable' || e.message?.includes('proxy')) {
+                    alert("Failed to send. Check your connection or disable proxy/VPN.");
+                } else {
+                    alert("Error sending message: " + e.message);
+                }
+            }
         };
 
         document.getElementById('new-group-btn').onclick = () => showGroupModal();
@@ -725,9 +765,7 @@
             modalTitle.textContent = 'Create Group';
             
             if (knownUsers.length === 0) {
-                modalContent.innerHTML = `
-                    <p class="text-white/70 mb-4">You need to start a 1-on-1 chat with someone before you can add them to a group.</p>
-                `;
+                modalContent.innerHTML = `<p class="text-white/70 mb-4">You need to start a 1-on-1 chat with someone before you can add them to a group.</p>`;
             } else {
                 modalContent.innerHTML = `
                     <input id="group-name-input" type="text" class="glass-input w-full p-3 rounded-xl mb-4 text-white placeholder-gray-400" placeholder="Enter Group Name">
@@ -751,8 +789,12 @@
                 const selectedMembers = Array.from(document.querySelectorAll('.member-checkbox:checked')).map(cb => cb.value);
                 if (!groupName) return alert("Please enter a group name");
                 if (selectedMembers.length === 0) return alert("Please select at least one member");
-                await addDoc(collection(db, "chats"), { name: groupName, type: 'group', members: [currentUser.uid, ...selectedMembers], createdAt: serverTimestamp(), unreadCounts: {} });
-                modal.classList.add('hidden');
+                try {
+                    await addDoc(collection(db, "chats"), { name: groupName, type: 'group', members: [currentUser.uid, ...selectedMembers], createdAt: serverTimestamp(), unreadCounts: {} });
+                    modal.classList.add('hidden');
+                } catch (e) {
+                    alert("Failed to create group. Check your connection.");
+                }
             };
         }
 
@@ -766,18 +808,22 @@
                 if (type === 'group') {
                     // Handled by showGroupModal now
                 } else {
-                    const userQuery = query(collection(db, "users"), where("username", "==", val));
-                    const querySnapshot = await getDocs(userQuery);
-                    
-                    if (querySnapshot.empty) return alert("User not found. Check the exact spelling.");
-                    
-                    let targetUser = null;
-                    querySnapshot.forEach(d => { targetUser = { id: d.id, ...d.data() }; });
-                    
-                    if (targetUser.id === currentUser.uid) return alert("You cannot message yourself.");
-                    
-                    const chatId = [currentUser.uid, targetUser.id].sort().join('_');
-                    await setDoc(doc(db, "chats", chatId), { type: 'direct', members: [currentUser.uid, targetUser.id], createdAt: serverTimestamp(), unreadCounts: {} }, { merge: true });
+                    try {
+                        const userQuery = query(collection(db, "users"), where("username", "==", val));
+                        const querySnapshot = await getDocs(userQuery);
+                        
+                        if (querySnapshot.empty) return alert("User not found. Check the exact spelling.");
+                        
+                        let targetUser = null;
+                        querySnapshot.forEach(d => { targetUser = { id: d.id, ...d.data() }; });
+                        
+                        if (targetUser.id === currentUser.uid) return alert("You cannot message yourself.");
+                        
+                        const chatId = [currentUser.uid, targetUser.id].sort().join('_');
+                        await setDoc(doc(db, "chats", chatId), { type: 'direct', members: [currentUser.uid, targetUser.id], createdAt: serverTimestamp(), unreadCounts: {} }, { merge: true });
+                    } catch (e) {
+                        alert("Failed to start chat. Check your connection.");
+                    }
                 }
             };
         }
