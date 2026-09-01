@@ -141,3 +141,86 @@ body {
     /* When a chat is open on mobile, we'd need JS to toggle, 
        but for now it stacks nicely or you can just use it on desktop/tablet */
 }
+
+/* =========================================
+   PREMIUM CSS-ONLY UPGRADES
+   ========================================= */
+
+/* 1. Custom Dark Scrollbars (Hides the ugly white default scrollbar) */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 2. Smooth Message Entry Animation */
+@keyframes slideUpFade {
+    0% { opacity: 0; transform: translateY(15px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.msg-bubble {
+    animation: slideUpFade 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* 3. Chat Bubble "Tails" (Makes it look like a real chat app) */
+.sent {
+    border-bottom-right-radius: 4px !important;
+    position: relative;
+}
+.sent::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: -6px;
+    width: 12px;
+    height: 12px;
+    background: var(--primary-color);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    z-index: -1;
+}
+
+.received {
+    border-bottom-left-radius: 4px !important;
+    position: relative;
+}
+.received::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -6px;
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+    z-index: -1;
+}
+
+/* 4. Input Field "Glow" on Focus */
+#message-input:focus {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 15px rgba(0, 168, 132, 0.2);
+    border-color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+/* 5. Sidebar Chat Item "Slide" on Hover */
+.chat-item {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.chat-item:hover {
+    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 6. Subtle Text Shadow for Header to make it pop */
+.glass-header h1 {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 0.5px;
+}
