@@ -382,19 +382,18 @@
            8. FLOATING GLASS DOCK - MESSAGE INPUT
            ============================================ */
         #input-area {
-            background: var(--glass-bg-heavy);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            border-top: 1px solid var(--glass-border-highlight);
-            padding: 16px 24px;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 10;
-            flex-shrink: 0;
-            display: none; /* Controlled by JS */
-            flex-direction: column;
-            gap: 8px;
-        }
+    background: var(--glass-bg-heavy);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-top: 1px solid var(--glass-border-highlight);
+    padding: 16px 24px;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
+    flex-direction: column;
+    gap: 8px;
+}
 
         #message-input {
             background: rgba(255, 255, 255, 0.04);
@@ -745,7 +744,7 @@
                     <p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging<br><span class="text-sm">Use the + button to find someone by their exact username</span></p>
                 </div>
                 <!-- REMOVED 'hidden' class, using inline style controlled by JS -->
-                <div id="input-area" class="glass-header p-4 border-t border-white/10">
+               <div id="input-area" class="glass-header p-4 border-t border-white/10" style="display: none;">
                     <div id="typing-indicator" class="typing-indicator" style="display: none;"></div>
                     <div id="voice-controls" class="voice-controls">
                         <button id="mic-btn" class="mic-btn" title="Record Voice Note"><i class="fa-solid fa-microphone"></i></button>
