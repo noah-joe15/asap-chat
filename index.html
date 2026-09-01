@@ -180,157 +180,45 @@
         .sidebar-toggle:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(0, 168, 132, 0.6); }
         .sidebar-toggle:active { transform: scale(0.95); }
 
-        /* ============================================
-           MOBILE RESPONSIVE DESIGN
-           ============================================ */
         @media (max-width: 768px) {
-            /* Show sidebar toggle */
             .sidebar-toggle { display: flex; }
-            
-            /* Sidebar is full-screen overlay on mobile */
-            aside { 
-                position: fixed; 
-                top: 0; 
-                left: 0; 
-                width: 100%; 
-                height: 100%; 
-                z-index: 50; 
-                transform: translateX(-100%); 
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-                border-right: none;
-                box-shadow: 4px 0 24px rgba(0,0,0,0.3);
-            }
+            aside { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: none; box-shadow: 4px 0 24px rgba(0,0,0,0.3); }
             aside.sidebar-open { transform: translateX(0); }
-            
-            /* Main content takes full width */
             .flex.flex-1 { display: flex; }
-            main { 
-                width: 100%; 
-                flex: 1;
-            }
-            
-            /* Header adjustments */
+            main { width: 100%; flex: 1; }
             .glass-header { padding: 12px 16px; }
             .glass-header h1 { font-size: 1.1rem; }
             .icon-btn { width: 36px; height: 36px; }
-            
-            /* Message bubbles */
-            .msg-bubble { 
-                max-width: 85%; 
-                font-size: 15px; 
-                padding: 12px 16px; 
-            }
-            
-            /* Input area - MORE SPACIOUS */
-            #input-area { 
-                padding: 16px 20px;
-                padding-bottom: calc(16px + env(safe-area-inset-bottom));
-            }
-            #message-input { 
-                padding: 16px 20px; 
-                font-size: 16px; /* Prevents zoom on iOS */
-                min-height: 52px;
-            }
-            #message-form button[type="submit"] { 
-                width: 56px; 
-                height: 56px;
-                min-width: 56px;
-            }
-            #message-form button[type="submit"] i {
-                font-size: 20px;
-            }
-            
-            /* Chat header */
-            #chat-header {
-                padding: 14px 16px;
-                font-size: 1.1rem;
-            }
-            
-            /* Login screen */
-            .glass-card { 
-                width: 90%; 
-                max-width: 400px; 
-                padding: 32px 24px; 
-            }
+            .msg-bubble { max-width: 85%; font-size: 15px; padding: 12px 16px; }
+            #input-area { padding: 16px 20px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+            #message-input { padding: 16px 20px; font-size: 16px; min-height: 52px; }
+            #message-form button[type="submit"] { width: 56px; height: 56px; min-width: 56px; }
+            #message-form button[type="submit"] i { font-size: 20px; }
+            #chat-header { padding: 14px 16px; font-size: 1.1rem; }
+            .glass-card { width: 90%; max-width: 400px; padding: 32px 24px; }
             .glass-card h1 { font-size: 1.75rem; }
-            
-            /* Modal */
-            #modal .glass-card { 
-                width: 90%; 
-                max-width: 400px; 
-                margin: 20px;
-                max-height: 85vh;
-            }
-            
-            /* Section headers in sidebar */
-            .p-3.border-b h3 {
-                font-size: 0.8rem;
-                padding: 8px 0;
-            }
-            
-            /* Chat items */
-            .chat-item {
-                padding: 14px;
-            }
-            .chat-item .w-10 {
-                width: 48px;
-                height: 48px;
-            }
-            
-            /* Search */
-            .search-input {
-                padding: 12px 12px 12px 42px;
-                font-size: 16px;
-            }
-            
-            /* Prevent zoom on input focus */
-            input, textarea, select { 
-                font-size: 16px !important; 
-            }
-            
-            /* Better spacing for empty state */
-            #empty-chat-msg {
-                padding: 20px;
-                font-size: 16px;
-            }
+            #modal .glass-card { width: 90%; max-width: 400px; margin: 20px; max-height: 85vh; }
+            .p-3.border-b h3 { font-size: 0.8rem; padding: 8px 0; }
+            .chat-item { padding: 14px; }
+            .chat-item .w-10 { width: 48px; height: 48px; }
+            .search-input { padding: 12px 12px 12px 42px; font-size: 16px; }
+            input, textarea, select { font-size: 16px !important; }
+            #empty-chat-msg { padding: 20px; font-size: 16px; }
         }
 
-        /* Small Mobile */
         @media (max-width: 480px) {
             .glass-header { padding: 10px 12px; }
             .glass-header h1 { font-size: 1rem; }
             .icon-btn { width: 32px; height: 32px; }
-            
-            .msg-bubble { 
-                max-width: 90%; 
-                font-size: 14px; 
-                padding: 10px 14px; 
-            }
-            
+            .msg-bubble { max-width: 90%; font-size: 14px; padding: 10px 14px; }
             #input-area { padding: 14px 16px; }
-            #message-input { 
-                padding: 14px 18px; 
-                font-size: 16px;
-                min-height: 48px;
-            }
-            #message-form button[type="submit"] { 
-                width: 52px; 
-                height: 52px;
-                min-width: 52px;
-            }
-            
-            .sidebar-toggle {
-                width: 56px;
-                height: 56px;
-                bottom: 85px;
-                right: 16px;
-            }
-            
+            #message-input { padding: 14px 18px; font-size: 16px; min-height: 48px; }
+            #message-form button[type="submit"] { width: 52px; height: 52px; min-width: 52px; }
+            .sidebar-toggle { width: 56px; height: 56px; bottom: 85px; right: 16px; }
             .chat-item { padding: 12px; }
             .chat-item .w-10 { width: 44px; height: 44px; }
         }
 
-        /* Landscape mode */
         @media (max-height: 500px) and (orientation: landscape) {
             .glass-header { padding: 8px 16px; }
             #input-area { padding: 10px 16px; }
@@ -338,14 +226,9 @@
             #message-form button[type="submit"] { width: 44px; height: 44px; }
         }
 
-        /* Safe area for notched phones */
         @supports (padding: env(safe-area-inset-bottom)) {
-            #input-area {
-                padding-bottom: calc(16px + env(safe-area-inset-bottom));
-            }
-            .sidebar-toggle {
-                bottom: calc(90px + env(safe-area-inset-bottom));
-            }
+            #input-area { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+            .sidebar-toggle { bottom: calc(90px + env(safe-area-inset-bottom)); }
         }
     </style>
 </head>
@@ -448,6 +331,10 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // Notification Sound Setup (Using a reliable, short Google-hosted sound)
+        const notificationSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+        notificationSound.volume = 0.5; // 50% volume so it's polite but noticeable
 
         let currentUser = null;
         let currentChatId = null;
@@ -657,17 +544,45 @@
 
             if (unsubscribeMessages) unsubscribeMessages();
             messagesContainer.innerHTML = '';
+            
             const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+            let isInitialMessageLoad = true; // Prevents sound from playing for old message history
+
             unsubscribeMessages = onSnapshot(q, (snapshot) => {
-                messagesContainer.innerHTML = '';
-                snapshot.forEach((docSnap) => {
-                    const msg = docSnap.data();
-                    const isMe = msg.senderId === currentUser.uid;
-                    const bubble = document.createElement('div');
-                    bubble.className = `msg-bubble p-3 ${isMe ? 'sent' : 'received'}`;
-                    bubble.innerHTML = `${!isMe ? `<div class="text-xs font-bold mb-1 opacity-75">${msg.senderName}</div>` : ''}<div>${msg.text}</div>`;
-                    messagesContainer.appendChild(bubble);
-                });
+                if (isInitialLoad) {
+                    // First time opening: just render all messages silently
+                    snapshot.forEach((docSnap) => {
+                        const msg = docSnap.data();
+                        const isMe = msg.senderId === currentUser.uid;
+                        const bubble = document.createElement('div');
+                        bubble.className = `msg-bubble p-3 ${isMe ? 'sent' : 'received'}`;
+                        bubble.innerHTML = `${!isMe ? `<div class="text-xs font-bold mb-1 opacity-75">${msg.senderName}</div>` : ''}<div>${msg.text}</div>`;
+                        messagesContainer.appendChild(bubble);
+                    });
+                    isInitialMessageLoad = false;
+                } else {
+                    // Subsequent updates: only process newly added messages
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "added") {
+                            const msg = change.doc.data();
+                            const isMe = msg.senderId === currentUser.uid;
+                            
+                            // Play sound ONLY if it's from someone else
+                            if (!isMe) {
+                                notificationSound.currentTime = 0; // Rewind to start
+                                notificationSound.play().catch(err => {
+                                    // Ignore autoplay errors (normal if browser blocks it before user interaction)
+                                    console.log("Audio play prevented:", err);
+                                });
+                            }
+
+                            const bubble = document.createElement('div');
+                            bubble.className = `msg-bubble p-3 ${isMe ? 'sent' : 'received'}`;
+                            bubble.innerHTML = `${!isMe ? `<div class="text-xs font-bold mb-1 opacity-75">${msg.senderName}</div>` : ''}<div>${msg.text}</div>`;
+                            messagesContainer.appendChild(bubble);
+                        }
+                    });
+                }
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
         }
