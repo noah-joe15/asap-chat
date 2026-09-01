@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASAP Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .chat-container { height: calc(100vh - 140px); }
+        .msg-bubble { max-width: 75%; word-wrap: break-word; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="flex items-center justify-center h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md w-80">
+            <h1 class="text-2xl font-bold mb-4 text-center">ASAP Chat</h1>
+            <input id="email-input" type="email" placeholder="Email" class="w-full p-2 border rounded mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input id="password-input" type="password" placeholder="Password" class="w-full p-2 border rounded mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input id="username-input" type="text" placeholder="Display Name (Required for Sign Up)" class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            
+            <div class="flex gap-2">
+                <button id="login-btn" class="flex-1 bg-blue-600 text-white p-2 rounded hover:bg-blue-700 font-semibold">Login</button>
+                <button id="signup-btn" class="flex-1 bg-green-600 text-white p-2 rounded hover:bg-green-700 font-semibold">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN -->
+    <div id="app-screen" class="hidden h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white shadow p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-blue-600">ASAP Chat</h1>
+            <div class="flex gap-2">
+                <button id="new-group-btn" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">+ Group</button>
+                <button id="new-dm-btn" class="bg-purple-500 text-white px-3 py-1 rounded text-sm hover:bg-purple-600">+ 1-on-1</button>
+                <button id="logout-btn" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Logout</button>
+            </div>
+        </header>
+
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar: Chats List -->
+            <aside class="w-1/3 bg-white border-r overflow-y-auto">
+                <div id="chats-list" class="p-2"></div>
+            </aside>
+
+            <!-- Main: Chat Window -->
+            <main class="flex-1 flex flex-col bg-gray-50">
+                <div id="chat-header" class="bg-white p-4 border-b font-semibold text-lg hidden"></div>
+                
+                <div id="messages-container" class="flex-1 overflow-y-auto p-4 chat-container flex flex-col gap-2">
+                    <p id="empty-chat-msg" class="text-center text-gray-400 mt-10">Select a chat to start messaging</p>
+                </div>
+
+                <div id="input-area" class="bg-white p-4 border-t hidden">
+                    <form id="message-form" class="flex gap-2">
+                        <input id="message-input" type="text" placeholder="Type a message..." class="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Send</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL FOR CREATING CHATS -->
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg w-80">
+            <h2 id="modal-title" class="text-xl font-bold mb-4"></h2>
+            <input id="modal-input" type="text" class="w-full p-2 border rounded mb-4" placeholder="">
+            <div class="flex justify-end gap-2">
+                <button id="modal-cancel" class="px-4 py-2 text-gray-600">Cancel</button>
+                <button id="modal-save" class="px-4 py-2 bg-blue-600 text-white rounded">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // 1. IMPORTS
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // 2. YOUR FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyCEMqKLVJnjEwTGe3XKGzsVZqrrr2gU4xg",
+            authDomain: "asap-chat-a4d31.firebaseapp.com",
+            projectId: "asap-chat-a4d31",
+            storageBucket: "asap-chat-a4d31.firebasestorage.app",
+            messagingSenderId: "1099390805568",
+            appId: "1:1099390805568:web:4ef8fbc076c9940465e1a5"
+        };
+
+        // 3. INITIALIZE FIREBASE
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let currentChatId = null;
+        let unsubscribeChats = null;
+        let unsubscribeMessages = null;
+
+        // UI Elements
+        const loginScreen = document.getElementById('login-screen');
+        const appScreen = document.getElementById('app-screen');
+        const emailInput = document.getElementById('email-input');
+        const passwordInput = document.getElementById('password-input');
+        const usernameInput = document.getElementById('username-input');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        const chatsList = document.getElementById('chats-list');
+        const chatHeader = document.getElementById('chat-header');
+        const messagesContainer = document.getElementById('messages-container');
+        const emptyChatMsg = document.getElementById('empty-chat-msg');
+        const inputArea = document.getElementById('input-area');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalInput = document.getElementById('modal-input');
+
+        // Helper to show app
+        function showApp(user) {
+            currentUser = user;
+            loginScreen.classList.add('hidden');
+            appScreen.classList.remove('hidden');
+            loadChats();
+        }
+
+        // 4. SIGN UP LOGIC
+        signupBtn.onclick = async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            const name = usernameInput.value.trim();
+
+            if (!email || !password || !name) return alert("Please fill in all fields to sign up.");
+            
+            try {
+                const userCred = await createUserWithEmailAndPassword(auth, email, password);
+                // Save username to Firestore
+                await setDoc(doc(db, "users", userCred.user.uid), {
+                    username: name,
+                    email: email,
+                    createdAt: serverTimestamp()
+                });
+                showApp(userCred.user);
+            } catch (e) {
+                alert("Sign Up Error: " + e.message);
+            }
+        };
+
+        // 5. LOGIN LOGIC
+        loginBtn.onclick = async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) return alert("Please enter email and password.");
+            
+            try {
+                const userCred = await signInWithEmailAndPassword(auth, email, password);
+                showApp(userCred.user);
+            } catch (e) {
+                alert("Login Error: " + e.message);
+            }
+        };
+
+        // 6. LOGOUT
+        logoutBtn.onclick = () => {
+            signOut(auth).then(() => {
+                appScreen.classList.add('hidden');
+                loginScreen.classList.remove('hidden');
+                if (unsubscribeChats) unsubscribeChats();
+                if (unsubscribeMessages) unsubscribeMessages();
+            });
+        };
+
+        // 7. LOAD CHATS
+        function loadChats() {
+            if (unsubscribeChats) unsubscribeChats();
+            
+            const q = query(collection(db, "chats"), where("members", "array-contains", currentUser.uid));
+            
+            unsubscribeChats = onSnapshot(q, async (snapshot) => {
+                chatsList.innerHTML = '';
+                const chatPromises = snapshot.docs.map(async (docSnap) => {
+                    const data = docSnap.data();
+                    let displayName = data.name;
+                    
+                    if (data.type === 'direct') {
+                        const otherUid = data.members.find(m => m !== currentUser.uid);
+                        const otherUserDoc = await getDoc(doc(db, "users", otherUid));
+                        displayName = otherUserDoc.exists() ? otherUserDoc.data().username : "Unknown User";
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = `p-3 hover:bg-gray-100 cursor-pointer rounded mb-1 ${currentChatId === docSnap.id ? 'bg-blue-50' : ''}`;
+                    div.innerHTML = `<div class="font-semibold">${displayName}</div><div class="text-xs text-gray-500">${data.type === 'group' ? 'Group' : 'Direct Message'}</div>`;
+                    div.onclick = () => openChat(docSnap.id, displayName);
+                    chatsList.appendChild(div);
+                });
+                await Promise.all(chatPromises);
+            });
+        }
+
+        // 8. OPEN CHAT & LISTEN TO MESSAGES
+        function openChat(chatId, name) {
+            currentChatId = chatId;
+            chatHeader.textContent = name;
+            chatHeader.classList.remove('hidden');
+            inputArea.classList.remove('hidden');
+            emptyChatMsg.classList.add('hidden');
+            
+            loadChats();
+
+            if (unsubscribeMessages) unsubscribeMessages();
+            messagesContainer.innerHTML = '';
+
+            const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+            unsubscribeMessages = onSnapshot(q, (snapshot) => {
+                messagesContainer.innerHTML = '';
+                snapshot.forEach((docSnap) => {
+                    const msg = docSnap.data();
+                    const isMe = msg.senderId === currentUser.uid;
+                    
+                    const bubble = document.createElement('div');
+                    bubble.className = `msg-bubble p-3 rounded-lg ${isMe ? 'bg-blue-500 text-white self-end' : 'bg-white text-gray-800 self-start shadow'}`;
+                    bubble.innerHTML = `
+                        ${!isMe ? `<div class="text-xs font-bold text-blue-600 mb-1">${msg.senderName}</div>` : ''}
+                        <div>${msg.text}</div>
+                    `;
+                    messagesContainer.appendChild(bubble);
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+
+        // 9. SEND MESSAGE
+        messageForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (!text || !currentChatId) return;
+
+            // Fetch username from Firestore to attach to message
+            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+            const senderName = userDoc.exists() ? userDoc.data().username : "User";
+
+            await addDoc(collection(db, "chats", currentChatId, "messages"), {
+                text: text,
+                senderId: currentUser.uid,
+                senderName: senderName,
+                timestamp: serverTimestamp()
+            });
+            messageInput.value = '';
+        };
+
+        // 10. CREATE NEW CHATS
+        document.getElementById('new-group-btn').onclick = () => showModal('Create Group', 'Enter Group Name', 'group');
+        document.getElementById('new-dm-btn').onclick = () => showModal('Start 1-on-1', 'Enter other user\'s exact Display Name', 'direct');
+        document.getElementById('modal-cancel').onclick = () => modal.classList.add('hidden');
+
+        function showModal(title, placeholder, type) {
+            modalTitle.textContent = title;
+            modalInput.placeholder = placeholder;
+            modalInput.value = '';
+            modal.classList.remove('hidden');
+            
+            document.getElementById('modal-save').onclick = async () => {
+                const val = modalInput.value.trim();
+                if (!val) return;
+                modal.classList.add('hidden');
+
+                if (type === 'group') {
+                    await addDoc(collection(db, "chats"), {
+                        name: val,
+                        type: 'group',
+                        members: [currentUser.uid],
+                        createdAt: serverTimestamp()
+                    });
+                } else {
+                    // Find user by Display Name
+                    const usersSnap = await getDocs(collection(db, "users"));
+                    let targetUser = null;
+                    usersSnap.forEach(d => { 
+                        if(d.data().username && d.data().username.toLowerCase() === val.toLowerCase()) {
+                            targetUser = { id: d.id, ...d.data() }; 
+                        }
+                    });
+                    
+                    if (!targetUser) return alert("User not found. Make sure they have signed up first.");
+                    if (targetUser.id === currentUser.uid) return alert("You cannot message yourself.");
+
+                    const chatId = [currentUser.uid, targetUser.id].sort().join('_');
+                    await setDoc(doc(db, "chats", chatId), {
+                        type: 'direct',
+                        members: [currentUser.uid, targetUser.id],
+                        createdAt: serverTimestamp()
+                    }, { merge: true });
+                }
+            };
+        }
+    </script>
+</body>
+</html>
