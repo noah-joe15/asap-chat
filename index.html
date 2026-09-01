@@ -8,13 +8,150 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind for base layout -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
     
     <style>
         /* CSS Variables for Dynamic Color Changing */
         :root {
             --primary-color: #00a884; /* Default WhatsApp Green */
             --primary-hover: #008f6f;
+        }
+
+        /* --- LIQUID MORPHISM BASE --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Animated Liquid Blobs in Background */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out alternate;
+            pointer-events: none;
+        }
+        .blob-1 {
+            width: 400px; height: 400px;
+            background: var(--primary-color);
+            top: -100px; left: -100px;
+        }
+        .blob-2 {
+            width: 350px; height: 350px;
+            background: #e94560;
+            bottom: -100px; right: -100px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* --- GLASSMORPHISM PANELS --- */
+        .glass-panel, .glass-header, .glass-sidebar, .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- INPUTS & BUTTONS --- */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        /* --- CHAT ITEMS & BUBBLES --- */
+        .chat-item {
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        .chat-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .active-chat {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: var(--primary-color);
+        }
+
+        .msg-bubble {
+            max-width: 75%;
+            word-wrap: break-word;
+            font-size: 15px;
+            line-height: 1.4;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .received {
+            background: rgba(255, 255, 255, 0.85);
+            color: #1a1a2e;
+            align-self: flex-start;
+            border-radius: 18px 18px 18px 4px;
+        }
+
+        .sent {
+            background: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-radius: 18px 18px 4px 18px;
         }
     </style>
 </head>
