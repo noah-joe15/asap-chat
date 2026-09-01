@@ -62,68 +62,36 @@
         .chat-item .w-10::after { content: ''; position: absolute; bottom: 2px; right: 2px; width: 8px; height: 8px; background: #10b981; border-radius: 50%; border: 2px solid rgba(10, 14, 39, 0.8); box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); }
 
         .unread-badge {
-            background: #ef4444;
-            color: white;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 12px;
-            min-width: 20px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-            margin-left: 8px;
-            flex-shrink: 0;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #ef4444; color: white; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 12px; min-width: 20px; text-align: center; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4); margin-left: 8px; flex-shrink: 0; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .unread-badge.hidden { display: none; }
         @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 
-        .msg-bubble { max-width: 75%; word-wrap: break-word; font-size: 15px; line-height: 1.5; padding: 12px 16px; margin-bottom: 8px; animation: messageFloatIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
+        .msg-bubble { max-width: 75%; word-wrap: break-word; font-size: 15px; line-height: 1.5; padding: 12px 16px; margin-bottom: 8px; animation: messageFloatIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; position: relative; }
         @keyframes messageFloatIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 
-        .received { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); color: #e8eaf0; align-self: flex-start; border-radius: 18px 18px 18px 4px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05); position: relative; }
+        .received { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); color: #e8eaf0; align-self: flex-start; border-radius: 18px 18px 18px 4px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
         .received::after { content: ''; position: absolute; bottom: 0; left: -6px; width: 12px; height: 12px; background: rgba(255, 255, 255, 0.08); clip-path: polygon(0 0, 100% 100%, 0 100%); }
-        .sent { background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); color: white; align-self: flex-end; border-radius: 18px 18px 4px 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 4px 20px rgba(0, 168, 132, 0.3), 0 0 30px rgba(0, 168, 132, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2); position: relative; }
+        .sent { background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); color: white; align-self: flex-end; border-radius: 18px 18px 4px 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 4px 20px rgba(0, 168, 132, 0.3), 0 0 30px rgba(0, 168, 132, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
         .sent::after { content: ''; position: absolute; bottom: 0; right: -6px; width: 12px; height: 12px; background: var(--primary-color); clip-path: polygon(100% 0, 100% 100%, 0 100%); }
 
-        #input-area { 
-            background: rgba(10, 14, 39, 0.8); 
-            backdrop-filter: blur(40px) saturate(200%); 
-            border-top: 1px solid rgba(255, 255, 255, 0.08); 
-            padding: 16px 24px; 
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 10;
+        /* NEW: Smart Timestamp & Delete Button Styles */
+        .msg-time { font-size: 10px; opacity: 0.6; margin-top: 4px; text-align: right; display: block; }
+        .received .msg-time { text-align: left; }
+        .delete-msg-btn {
+            position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
-        #message-input { 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 24px; 
-            padding: 14px 24px; 
-            color: #e8eaf0; 
-            font-size: 15px; 
-            transition: all 0.3s ease; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); 
-            width: 100%;
-            min-height: 48px;
-        }
+        .msg-bubble:hover .delete-msg-btn { opacity: 1; }
+        @media (max-width: 768px) { .delete-msg-btn { opacity: 0.7; top: -6px; right: -6px; } }
+
+        /* NEW: Typing Indicator */
+        .typing-indicator { font-size: 12px; color: var(--primary-color); font-style: italic; padding: 4px 16px; min-height: 20px; opacity: 0.8; }
+
+        #input-area { background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(40px) saturate(200%); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 16px 24px; box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3); position: relative; z-index: 10; }
+        #message-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 14px 24px; color: #e8eaf0; font-size: 15px; transition: all 0.3s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); width: 100%; min-height: 48px; }
         #message-input:focus { outline: none; background: rgba(255, 255, 255, 0.08); border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1), 0 0 20px rgba(0, 168, 132, 0.15); }
         #message-input::placeholder { color: rgba(255, 255, 255, 0.4); }
         #message-form { display: flex; gap: 12px; align-items: center; }
-        #message-form button[type="submit"] { 
-            background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); 
-            border: none; 
-            border-radius: 50%; 
-            width: 52px; 
-            height: 52px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            box-shadow: 0 4px 15px rgba(0, 168, 132, 0.4); 
-            flex-shrink: 0;
-        }
+        #message-form button[type="submit"] { background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); border: none; border-radius: 50%; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0, 168, 132, 0.4); flex-shrink: 0; }
         #message-form button[type="submit"]:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 25px rgba(0, 168, 132, 0.5); }
         #message-form button[type="submit"]:active { transform: translateY(0) scale(0.95); }
 
@@ -135,10 +103,7 @@
         .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.8); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; }
         .icon-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); color: white; }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 
         .glass-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px 16px; color: #e8eaf0; font-size: 15px; transition: all 0.3s; }
         .glass-input:focus { outline: none; background: rgba(255, 255, 255, 0.08); border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1); }
@@ -156,79 +121,33 @@
 
         .no-results { text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.4); font-size: 14px; }
         .user-item.hidden { display: none; }
-        .highlight { background: rgba(0, 168, 132, 0.3); padding: 0 2px; border-radius: 2px; font-weight: 600; }
 
-        .sidebar-toggle { 
-            display: none; 
-            position: fixed; 
-            bottom: 90px; 
-            right: 20px; 
-            width: 60px; 
-            height: 60px; 
-            border-radius: 50%; 
-            background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); 
-            border: none; 
-            color: white; 
-            font-size: 24px; 
-            cursor: pointer; 
-            box-shadow: 0 6px 24px rgba(0, 168, 132, 0.5); 
-            z-index: 100; 
-            transition: all 0.3s; 
-            align-items: center; 
-            justify-content: center;
-        }
+        .sidebar-toggle { display: none; position: fixed; bottom: 90px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%); border: none; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 6px 24px rgba(0, 168, 132, 0.5); z-index: 100; transition: all 0.3s; align-items: center; justify-content: center; }
         .sidebar-toggle:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(0, 168, 132, 0.6); }
-        .sidebar-toggle:active { transform: scale(0.95); }
 
         @media (max-width: 768px) {
             .sidebar-toggle { display: flex; }
             aside { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: none; box-shadow: 4px 0 24px rgba(0,0,0,0.3); }
             aside.sidebar-open { transform: translateX(0); }
-            .flex.flex-1 { display: flex; }
-            main { width: 100%; flex: 1; }
-            .glass-header { padding: 12px 16px; }
-            .glass-header h1 { font-size: 1.1rem; }
-            .icon-btn { width: 36px; height: 36px; }
+            .flex.flex-1 { display: flex; } main { width: 100%; flex: 1; }
+            .glass-header { padding: 12px 16px; } .glass-header h1 { font-size: 1.1rem; } .icon-btn { width: 36px; height: 36px; }
             .msg-bubble { max-width: 85%; font-size: 15px; padding: 12px 16px; }
             #input-area { padding: 16px 20px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
             #message-input { padding: 16px 20px; font-size: 16px; min-height: 52px; }
             #message-form button[type="submit"] { width: 56px; height: 56px; min-width: 56px; }
-            #message-form button[type="submit"] i { font-size: 20px; }
             #chat-header { padding: 14px 16px; font-size: 1.1rem; }
             .glass-card { width: 90%; max-width: 400px; padding: 32px 24px; }
-            .glass-card h1 { font-size: 1.75rem; }
             #modal .glass-card { width: 90%; max-width: 400px; margin: 20px; max-height: 85vh; }
-            .p-3.border-b h3 { font-size: 0.8rem; padding: 8px 0; }
-            .chat-item { padding: 14px; }
-            .chat-item .w-10 { width: 48px; height: 48px; }
-            .search-input { padding: 12px 12px 12px 42px; font-size: 16px; }
+            .chat-item { padding: 14px; } .chat-item .w-10 { width: 48px; height: 48px; }
             input, textarea, select { font-size: 16px !important; }
-            #empty-chat-msg { padding: 20px; font-size: 16px; }
         }
 
         @media (max-width: 480px) {
-            .glass-header { padding: 10px 12px; }
-            .glass-header h1 { font-size: 1rem; }
-            .icon-btn { width: 32px; height: 32px; }
+            .glass-header { padding: 10px 12px; } .glass-header h1 { font-size: 1rem; } .icon-btn { width: 32px; height: 32px; }
             .msg-bubble { max-width: 90%; font-size: 14px; padding: 10px 14px; }
-            #input-area { padding: 14px 16px; }
-            #message-input { padding: 14px 18px; font-size: 16px; min-height: 48px; }
+            #input-area { padding: 14px 16px; } #message-input { padding: 14px 18px; font-size: 16px; min-height: 48px; }
             #message-form button[type="submit"] { width: 52px; height: 52px; min-width: 52px; }
             .sidebar-toggle { width: 56px; height: 56px; bottom: 85px; right: 16px; }
-            .chat-item { padding: 12px; }
-            .chat-item .w-10 { width: 44px; height: 44px; }
-        }
-
-        @media (max-height: 500px) and (orientation: landscape) {
-            .glass-header { padding: 8px 16px; }
-            #input-area { padding: 10px 16px; }
-            .msg-bubble { padding: 8px 12px; }
-            #message-form button[type="submit"] { width: 44px; height: 44px; }
-        }
-
-        @supports (padding: env(safe-area-inset-bottom)) {
-            #input-area { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
-            .sidebar-toggle { bottom: calc(90px + env(safe-area-inset-bottom)); }
         }
     </style>
 </head>
@@ -273,7 +192,6 @@
                     <h3 class="text-sm font-semibold text-white/70 uppercase tracking-wider"><i class="fa-solid fa-comments mr-2"></i>Your Chats</h3>
                 </div>
                 <div id="chats-list" class="p-3"></div>
-                
                 <div class="p-3 border-b border-white/10 mb-2 mt-4">
                     <h3 class="text-sm font-semibold text-white/70 uppercase tracking-wider"><i class="fa-solid fa-users mr-2"></i>All Users</h3>
                 </div>
@@ -289,9 +207,11 @@
             <main class="flex-1 flex flex-col relative">
                 <div id="chat-header" class="glass-header p-4 font-semibold text-lg text-white hidden border-b border-white/10"></div>
                 <div id="messages-container" class="flex-1 overflow-y-auto p-4 chat-container flex flex-col gap-2">
-                    <p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging<br><span class="text-sm">Or click the same chat again to close it</span></p>
+                    <p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging</p>
                 </div>
                 <div id="input-area" class="glass-header p-4 hidden border-t border-white/10">
+                    <!-- NEW: Typing Indicator -->
+                    <div id="typing-indicator" class="typing-indicator"></div>
                     <form id="message-form" class="flex gap-3 items-center">
                         <input id="message-input" type="text" placeholder="Type a message..." class="glass-input flex-1 p-3 rounded-full text-white placeholder-gray-300">
                         <button type="submit" class="btn-primary w-12 h-12 rounded-full flex items-center justify-center text-white text-lg"><i class="fa-solid fa-paper-plane"></i></button>
@@ -317,7 +237,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, getDoc, getDocs, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, getDoc, getDocs, updateDoc, increment, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCEMqKLVJnjEwTGe3XKGzsVZqrrr2gU4xg",
@@ -332,9 +252,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Notification Sound Setup (Using a reliable, short Google-hosted sound)
         const notificationSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
-        notificationSound.volume = 0.5; // 50% volume so it's polite but noticeable
+        notificationSound.volume = 0.5;
 
         let currentUser = null;
         let currentChatId = null;
@@ -342,6 +261,7 @@
         let unsubscribeChats = null;
         let unsubscribeMessages = null;
         let unsubscribeUsers = null;
+        let unsubscribeTyping = null;
 
         const loginScreen = document.getElementById('login-screen');
         const appScreen = document.getElementById('app-screen');
@@ -363,6 +283,7 @@
         const inputArea = document.getElementById('input-area');
         const messageForm = document.getElementById('message-form');
         const messageInput = document.getElementById('message-input');
+        const typingIndicator = document.getElementById('typing-indicator');
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modal-title');
         const modalContent = document.getElementById('modal-content');
@@ -414,8 +335,26 @@
                 if (unsubscribeChats) unsubscribeChats();
                 if (unsubscribeMessages) unsubscribeMessages();
                 if (unsubscribeUsers) unsubscribeUsers();
+                if (unsubscribeTyping) unsubscribeTyping();
             });
         };
+
+        // --- NEW: Smart Timestamps ---
+        function getSmartTime(timestamp) {
+            if (!timestamp) return '';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays === 1) return 'Yesterday';
+            return date.toLocaleDateString();
+        }
 
         function loadChats() {
             if (unsubscribeChats) unsubscribeChats();
@@ -500,9 +439,8 @@
             let visibleCount = 0;
             userItems.forEach(item => {
                 const username = item.dataset.username.toLowerCase();
-                if (username.includes(searchTerm)) {
-                    item.classList.remove('hidden'); visibleCount++;
-                } else { item.classList.add('hidden'); }
+                if (username.includes(searchTerm)) { item.classList.remove('hidden'); visibleCount++; } 
+                else { item.classList.add('hidden'); }
             });
             const existingNoResults = usersList.querySelector('.no-results');
             if (existingNoResults) existingNoResults.remove();
@@ -526,11 +464,12 @@
 
         function toggleChat(chatId, name) {
             if (currentChatId === chatId) {
-                currentChatId = null; chatHeader.classList.add('hidden'); inputArea.classList.add('hidden');
+                currentChatId = null; chatHeader.classList.add('hidden'); inputArea.classList.add('hidden'); typingIndicator.style.display = 'none';
                 emptyChatMsg.classList.remove('hidden');
                 messagesContainer.innerHTML = '<p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging</p>';
                 loadChats();
                 if (unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
+                if (unsubscribeTyping) { unsubscribeTyping(); unsubscribeTyping = null; }
             } else { openChat(chatId, name); }
         }
 
@@ -543,49 +482,102 @@
             await updateDoc(chatRef, { [`unreadCounts.${currentUser.uid}`]: 0 });
 
             if (unsubscribeMessages) unsubscribeMessages();
+            if (unsubscribeTyping) unsubscribeTyping();
             messagesContainer.innerHTML = '';
             
             const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-            let isInitialMessageLoad = true; // Prevents sound from playing for old message history
+            let isInitialMessageLoad = true;
 
             unsubscribeMessages = onSnapshot(q, (snapshot) => {
-                if (isInitialLoad) {
-                    // First time opening: just render all messages silently
-                    snapshot.forEach((docSnap) => {
-                        const msg = docSnap.data();
-                        const isMe = msg.senderId === currentUser.uid;
-                        const bubble = document.createElement('div');
-                        bubble.className = `msg-bubble p-3 ${isMe ? 'sent' : 'received'}`;
-                        bubble.innerHTML = `${!isMe ? `<div class="text-xs font-bold mb-1 opacity-75">${msg.senderName}</div>` : ''}<div>${msg.text}</div>`;
-                        messagesContainer.appendChild(bubble);
-                    });
+                if (isInitialMessageLoad) {
+                    snapshot.forEach((docSnap) => renderMessage(docSnap));
                     isInitialMessageLoad = false;
                 } else {
-                    // Subsequent updates: only process newly added messages
                     snapshot.docChanges().forEach((change) => {
                         if (change.type === "added") {
+                            renderMessage(change.doc);
                             const msg = change.doc.data();
-                            const isMe = msg.senderId === currentUser.uid;
-                            
-                            // Play sound ONLY if it's from someone else
-                            if (!isMe) {
-                                notificationSound.currentTime = 0; // Rewind to start
-                                notificationSound.play().catch(err => {
-                                    // Ignore autoplay errors (normal if browser blocks it before user interaction)
-                                    console.log("Audio play prevented:", err);
-                                });
+                            if (msg.senderId !== currentUser.uid) {
+                                notificationSound.currentTime = 0;
+                                notificationSound.play().catch(() => {});
                             }
-
-                            const bubble = document.createElement('div');
-                            bubble.className = `msg-bubble p-3 ${isMe ? 'sent' : 'received'}`;
-                            bubble.innerHTML = `${!isMe ? `<div class="text-xs font-bold mb-1 opacity-75">${msg.senderName}</div>` : ''}<div>${msg.text}</div>`;
-                            messagesContainer.appendChild(bubble);
                         }
                     });
                 }
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
+
+            // --- NEW: Listen to Typing Status ---
+            unsubscribeTyping = onSnapshot(chatRef, (docSnap) => {
+                if(docSnap.exists()) {
+                    const data = docSnap.data();
+                    const typingData = data.typing || {};
+                    const otherUserIds = data.members.filter(uid => uid !== currentUser.uid);
+                    let typingUsers = [];
+                    
+                    otherUserIds.forEach(uid => {
+                        if(typingData[uid] && typingData[uid].seconds) {
+                            const lastTyped = typingData[uid].seconds * 1000;
+                            if((Date.now() - lastTyped) < 3000) {
+                                const user = allUsers.find(u => u.id === uid);
+                                if(user) typingUsers.push(user.username);
+                            }
+                        }
+                    });
+                    
+                    if(typingUsers.length > 0) {
+                        typingIndicator.textContent = `${typingUsers.join(', ')} ${typingUsers.length === 1 ? 'is' : 'are'} typing...`;
+                        typingIndicator.style.display = 'block';
+                    } else {
+                        typingIndicator.style.display = 'none';
+                    }
+                }
+            });
         }
+
+        // --- NEW: Render Message with Time and Delete Button ---
+        function renderMessage(docSnap) {
+            const msg = docSnap.data();
+            const isMe = msg.senderId === currentUser.uid;
+            const bubble = document.createElement('div');
+            bubble.className = `msg-bubble p-3 ${isMe ? 'sent' : 'received'}`;
+            
+            let deleteBtn = '';
+            if (isMe) {
+                deleteBtn = `<button class="delete-msg-btn" data-id="${docSnap.id}" title="Delete"><i class="fa-solid fa-trash-can"></i></button>`;
+            }
+
+            bubble.innerHTML = `
+                ${deleteBtn}
+                ${!isMe ? `<div class="text-xs font-bold mb-1 opacity-75">${msg.senderName}</div>` : ''}
+                <div>${msg.text}</div>
+                <span class="msg-time">${getSmartTime(msg.timestamp)}</span>
+            `;
+            messagesContainer.appendChild(bubble);
+        }
+
+        // --- NEW: Handle Delete Clicks ---
+        messagesContainer.addEventListener('click', async (e) => {
+            const deleteBtn = e.target.closest('.delete-msg-btn');
+            if (deleteBtn && currentChatId) {
+                const msgId = deleteBtn.dataset.id;
+                if(confirm("Delete this message?")) {
+                    await deleteDoc(doc(db, "chats", currentChatId, "messages", msgId));
+                }
+            }
+        });
+
+        // --- NEW: Typing Indicator Logic ---
+        let lastTypingUpdate = 0;
+        messageInput.addEventListener('input', () => {
+            const now = Date.now();
+            if (now - lastTypingUpdate > 2000 && currentChatId) {
+                updateDoc(doc(db, "chats", currentChatId), {
+                    [`typing.${currentUser.uid}`]: serverTimestamp()
+                }).catch(() => {});
+                lastTypingUpdate = now;
+            }
+        });
 
         messageForm.onsubmit = async (e) => {
             e.preventDefault();
@@ -599,17 +591,18 @@
                 text: text, senderId: currentUser.uid, senderName: senderName, timestamp: serverTimestamp()
             });
 
+            // Clear typing status when sending
+            updateDoc(doc(db, "chats", currentChatId), {
+                [`typing.${currentUser.uid}`]: null
+            }).catch(() => {});
+
             const chatRef = doc(db, "chats", currentChatId);
             const chatSnap = await getDoc(chatRef);
             const members = chatSnap.data().members;
             const updates = {};
-            
             members.forEach(uid => {
-                if (uid !== currentUser.uid) {
-                    updates[`unreadCounts.${uid}`] = increment(1);
-                }
+                if (uid !== currentUser.uid) updates[`unreadCounts.${uid}`] = increment(1);
             });
-            
             await updateDoc(chatRef, updates);
             messageInput.value = '';
         };
