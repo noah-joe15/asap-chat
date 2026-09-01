@@ -2,149 +2,248 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ASAP Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
         :root {
             --primary-color: #00a884;
-            --primary-hover: #008f6f;
+            --primary-hover: #00d4a8;
+            --primary-glow: rgba(0, 168, 132, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.12);
+            --deep-navy: #0a0e27;
+            --space-blue: #1a1f3a;
+            --nebula-purple: rgba(120, 80, 200, 0.15);
+            --nebula-green: rgba(0, 168, 132, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #141a3a 50%, #1a1f4a 100%);
             min-height: 100vh;
             overflow: hidden;
-            color: white;
+            color: #e8eaf0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
+            filter: blur(120px);
             z-index: 0;
-            opacity: 0.6;
-            animation: float 10s infinite ease-in-out alternate;
+            opacity: 0.4;
+            animation: nebulaFloat 20s infinite ease-in-out alternate;
             pointer-events: none;
         }
         .blob-1 {
-            width: 400px; height: 400px;
-            background: var(--primary-color);
-            top: -100px; left: -100px;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+            top: -150px; left: -150px;
+            animation-duration: 25s;
         }
         .blob-2 {
-            width: 350px; height: 350px;
-            background: #e94560;
-            bottom: -100px; right: -100px;
-            animation-delay: -5s;
+            width: 450px; height: 450px;
+            background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
+            bottom: -150px; right: -150px;
+            animation-delay: -10s;
+            animation-duration: 30s;
         }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 50px) scale(1.1); }
+        @keyframes nebulaFloat {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            50% { transform: translate(30px, -30px) scale(1.1); opacity: 0.5; }
+            100% { transform: translate(-20px, 20px) scale(0.95); opacity: 0.35; }
         }
 
         .glass-panel, .glass-header, .glass-sidebar, .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .glass-card {
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .glass-header {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(10, 14, 39, 0.6);
+            backdrop-filter: blur(40px) saturate(200%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        .glass-input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-        .glass-input:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--primary-color);
+        .glass-sidebar {
+            background: rgba(10, 14, 39, 0.4);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        .btn-primary {
-            background: var(--primary-color);
-            border: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+        #messages-container {
+            position: relative;
+            background: 
+                radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.9), transparent),
+                linear-gradient(135deg, #0a0e27 0%, #141a3a 50%, #1a1f4a 100%);
+            background-size: 2000px 2000px;
         }
 
-        .icon-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        #messages-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                radial-gradient(2px 2px at 100px 50px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(2px 2px at 300px 150px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(2px 2px at 500px 80px, rgba(255,255,255,0.9), transparent);
+            animation: twinkle 4s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
         }
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(1.1);
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+
+        #messages-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, var(--nebula-purple) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--nebula-green) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .msg-bubble, #empty-chat-msg {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .glass-header h1 {
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            letter-spacing: 0.02em;
+            font-size: 1.25rem;
         }
 
         .chat-item {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid transparent;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            padding: 12px;
+            position: relative;
+            overflow: hidden;
         }
+
         .chat-item:hover {
             transform: translateX(4px);
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.08);
         }
+
         .active-chat {
-            background: rgba(255, 255, 255, 0.15) !important;
-            border-color: var(--primary-color);
+            background: linear-gradient(90deg, rgba(0, 168, 132, 0.15) 0%, rgba(0, 168, 132, 0.05) 100%) !important;
+            border-color: rgba(0, 168, 132, 0.3) !important;
+            box-shadow: 
+                0 0 20px rgba(0, 168, 132, 0.15),
+                inset 0 0 0 1px rgba(0, 168, 132, 0.2);
+        }
+
+        .active-chat::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary-color);
+            border-radius: 0 3px 3px 0;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .chat-item .w-10 {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .chat-item .w-10::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            border: 2px solid rgba(10, 14, 39, 0.8);
+            box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
         }
 
         .msg-bubble {
             max-width: 75%;
             word-wrap: break-word;
             font-size: 15px;
-            line-height: 1.4;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            animation: slideUpFade 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            line-height: 1.5;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            animation: messageFloatIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
         }
 
-        @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(15px) scale(0.95); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes messageFloatIn {
+            0% { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.95); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
         }
 
         .received {
-            background: rgba(255, 255, 255, 0.85);
-            color: #1a1a2e;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            color: #e8eaf0;
             align-self: flex-start;
             border-radius: 18px 18px 18px 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
             position: relative;
         }
+
         .received::after {
             content: '';
             position: absolute;
@@ -152,17 +251,25 @@
             left: -6px;
             width: 12px;
             height: 12px;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.08);
             clip-path: polygon(0 0, 100% 100%, 0 100%);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sent {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%);
             color: white;
             align-self: flex-end;
             border-radius: 18px 18px 4px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 4px 20px rgba(0, 168, 132, 0.3),
+                0 0 30px rgba(0, 168, 132, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
             position: relative;
         }
+
         .sent::after {
             content: '';
             position: absolute;
@@ -172,53 +279,567 @@
             height: 12px;
             background: var(--primary-color);
             clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        #input-area {
+            background: rgba(10, 14, 39, 0.8);
+            backdrop-filter: blur(40px) saturate(200%);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px 24px;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        #message-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 14px 24px;
+            color: #e8eaf0;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #message-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-color);
+            box-shadow: 
+                0 0 0 3px rgba(0, 168, 132, 0.1),
+                0 0 20px rgba(0, 168, 132, 0.15),
+                inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #message-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #message-form button[type="submit"] {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 15px rgba(0, 168, 132, 0.4),
+                0 0 0 0 rgba(0, 168, 132, 0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #message-form button[type="submit"]:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 
+                0 6px 25px rgba(0, 168, 132, 0.5),
+                0 0 30px rgba(0, 168, 132, 0.2);
+        }
+
+        #message-form button[type="submit"]:active {
+            transform: translateY(0) scale(0.95);
+            box-shadow: 
+                0 2px 10px rgba(0, 168, 132, 0.3),
+                0 0 0 3px rgba(0, 168, 132, 0.1);
+        }
+
+        #message-form button[type="submit"] i {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 15px rgba(0, 168, 132, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 168, 132, 0.4),
+                0 0 30px rgba(0, 168, 132, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 10px rgba(0, 168, 132, 0.3),
+                inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.8);
+            width: 36px; 
+            height: 36px;
+            border-radius: 10px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .icon-btn:active {
+            transform: translateY(0);
         }
 
         ::-webkit-scrollbar {
             width: 6px;
+            height: 6px;
         }
+
         ::-webkit-scrollbar-track {
             background: transparent;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+            transition: background 0.3s;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+
+        #modal {
+            backdrop-filter: blur(20px);
+            background: rgba(10, 14, 39, 0.8);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #e8eaf0;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1);
+        }
+
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .user-checkbox {
             appearance: none;
             width: 20px;
             height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 4px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
             cursor: pointer;
             position: relative;
             transition: all 0.2s;
+            background: rgba(255,255,255,0.05);
         }
+
         .user-checkbox:checked {
             background: var(--primary-color);
             border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
         }
+
         .user-checkbox:checked::after {
             content: '✓';
             position: absolute;
             color: white;
+            font-size: 12px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        a, button, input, select, textarea {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        ::selection {
+            background: rgba(0, 168, 132, 0.3);
+            color: white;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.4);
             font-size: 14px;
-            top: -2px;
-            left: 2px;
+            pointer-events: none;
+            transition: color 0.3s;
         }
 
-        .glass-header h1 {
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: 0.5px;
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 12px 10px 38px;
+            color: #e8eaf0;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
 
-        #message-input:focus {
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 15px rgba(0, 168, 132, 0.2);
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1);
+        }
+
+        .search-input:focus + .search-icon {
+            color: var(--primary-color);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+        }
+
+        .no-results i {
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        .user-item.hidden {
+            display: none;
+        }
+
+        .highlight {
+            background: rgba(0, 168, 132, 0.3);
+            padding: 0 2px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        /* ============================================
+           MOBILE SIDEBAR TOGGLE
+           ============================================ */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 168, 132, 0.4);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .sidebar-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(0, 168, 132, 0.6);
+        }
+
+        .sidebar-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================
+           RESPONSIVE BREAKPOINTS
+           ============================================ */
+        
+        /* Large Desktop (1200px+) */
+        @media (min-width: 1200px) {
+            .glass-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .msg-bubble {
+                max-width: 65%;
+                font-size: 16px;
+            }
+        }
+
+        /* Tablet (768px - 1199px) */
+        @media (max-width: 1199px) and (min-width: 768px) {
+            aside {
+                width: 35%;
+            }
+            
+            .msg-bubble {
+                max-width: 70%;
+            }
+        }
+
+        /* Mobile (< 768px) */
+        @media (max-width: 767px) {
+            /* Show sidebar toggle button */
+            .sidebar-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Sidebar becomes full-screen overlay */
+            aside {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 50;
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border-right: none;
+            }
+
+            aside.sidebar-open {
+                transform: translateX(0);
+            }
+
+            /* Header adjustments */
+            .glass-header {
+                padding: 12px 16px;
+            }
+
+            .glass-header h1 {
+                font-size: 1.1rem;
+            }
+
+            .glass-header h1 i {
+                font-size: 1rem;
+            }
+
+            /* Smaller icon buttons */
+            .icon-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+
+            /* Color picker smaller */
+            .flex.items-center.bg-white\/20 {
+                padding: 6px 10px;
+            }
+
+            #theme-color-picker {
+                width: 20px;
+                height: 20px;
+            }
+
+            /* Chat area takes full width */
+            main {
+                width: 100%;
+            }
+
+            /* Message bubbles */
+            .msg-bubble {
+                max-width: 85%;
+                font-size: 14px;
+                padding: 10px 14px;
+            }
+
+            /* Input area */
+            #input-area {
+                padding: 12px 16px;
+            }
+
+            #message-input {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+
+            #message-form button[type="submit"] {
+                width: 44px;
+                height: 44px;
+            }
+
+            /* Chat header */
+            #chat-header {
+                padding: 12px 16px;
+                font-size: 1rem;
+            }
+
+            /* Login screen */
+            .glass-card {
+                width: 90%;
+                max-width: 360px;
+                padding: 24px;
+            }
+
+            .glass-card h1 {
+                font-size: 1.5rem;
+            }
+
+            /* Modal adjustments */
+            #modal .glass-card {
+                width: 90%;
+                max-width: 360px;
+                margin: 20px;
+            }
+
+            /* Section headers */
+            .p-3.border-b h3 {
+                font-size: 0.75rem;
+            }
+
+            /* Chat items */
+            .chat-item {
+                padding: 10px;
+            }
+
+            .chat-item .w-10 {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Small Mobile (< 480px) */
+        @media (max-width: 479px) {
+            .glass-header {
+                padding: 10px 12px;
+            }
+
+            .glass-header h1 {
+                font-size: 1rem;
+            }
+
+            .icon-btn {
+                width: 30px;
+                height: 30px;
+            }
+
+            .msg-bubble {
+                max-width: 90%;
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+
+            #input-area {
+                padding: 10px 12px;
+            }
+
+            #message-input {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            #message-form button[type="submit"] {
+                width: 40px;
+                height: 40px;
+            }
+
+            .sidebar-toggle {
+                width: 50px;
+                height: 50px;
+                bottom: 70px;
+                right: 15px;
+            }
+        }
+
+        /* Landscape mode on mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .glass-header {
+                padding: 8px 16px;
+            }
+
+            #input-area {
+                padding: 8px 16px;
+            }
+
+            .msg-bubble {
+                padding: 8px 12px;
+            }
+        }
+
+        /* Prevent zoom on input focus (iOS) */
+        @media (max-width: 767px) {
+            input, textarea, select {
+                font-size: 16px !important;
+            }
+        }
+
+        /* Safe area for notched phones */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            #input-area {
+                padding-bottom: calc(16px + env(safe-area-inset-bottom));
+            }
+
+            .sidebar-toggle {
+                bottom: calc(80px + env(safe-area-inset-bottom));
+            }
         }
     </style>
 </head>
@@ -259,7 +880,7 @@
         </header>
 
         <div class="flex flex-1 overflow-hidden">
-            <aside class="w-1/3 glass-sidebar overflow-y-auto">
+            <aside id="sidebar" class="w-1/3 glass-sidebar overflow-y-auto">
                 <div class="p-3 border-b border-white/10 mb-2">
                     <h3 class="text-sm font-semibold text-white/70 uppercase tracking-wider"><i class="fa-solid fa-comments mr-2"></i>Your Chats</h3>
                 </div>
@@ -268,7 +889,15 @@
                 <div class="p-3 border-b border-white/10 mb-2 mt-4">
                     <h3 class="text-sm font-semibold text-white/70 uppercase tracking-wider"><i class="fa-solid fa-users mr-2"></i>All Users</h3>
                 </div>
-                <div id="users-list" class="p-3"></div>
+                
+                <div class="px-3 pb-3">
+                    <div class="search-container">
+                        <input type="text" id="user-search" class="search-input" placeholder="Search users...">
+                        <i class="fa-solid fa-search search-icon"></i>
+                    </div>
+                </div>
+                
+                <div id="users-list" class="p-3 pt-0"></div>
             </aside>
 
             <main class="flex-1 flex flex-col relative">
@@ -286,6 +915,11 @@
                 </div>
             </main>
         </div>
+
+        <!-- Mobile Sidebar Toggle Button -->
+        <button id="sidebar-toggle" class="sidebar-toggle">
+            <i class="fa-solid fa-comments"></i>
+        </button>
     </div>
 
     <!-- MODAL FOR CREATING CHATS -->
@@ -329,6 +963,8 @@
 
         const loginScreen = document.getElementById('login-screen');
         const appScreen = document.getElementById('app-screen');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
         const emailInput = document.getElementById('email-input');
         const passwordInput = document.getElementById('password-input');
         const usernameInput = document.getElementById('username-input');
@@ -336,6 +972,7 @@
         const signupBtn = document.getElementById('signup-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const colorPicker = document.getElementById('theme-color-picker');
+        const userSearch = document.getElementById('user-search');
         
         const chatsList = document.getElementById('chats-list');
         const usersList = document.getElementById('users-list');
@@ -349,6 +986,18 @@
         const modalTitle = document.getElementById('modal-title');
         const modalContent = document.getElementById('modal-content');
         const modalInput = document.getElementById('modal-input');
+
+        // Sidebar toggle for mobile
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-open');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 768 && !sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                sidebar.classList.remove('sidebar-open');
+            }
+        });
 
         const savedColor = localStorage.getItem('chatThemeColor');
         if (savedColor) {
@@ -427,7 +1076,7 @@
                     div.className = `chat-item p-3 rounded-xl mb-2 cursor-pointer ${currentChatId === docSnap.id ? 'active-chat' : ''}`;
                     div.innerHTML = `
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg">
+                            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg relative">
                                 <i class="fa-solid ${icon}"></i>
                             </div>
                             <div class="flex-1 min-w-0">
@@ -436,7 +1085,12 @@
                             </div>
                         </div>
                     `;
-                    div.onclick = () => toggleChat(docSnap.id, displayName);
+                    div.onclick = () => {
+                        toggleChat(docSnap.id, displayName);
+                        if (window.innerWidth < 768) {
+                            sidebar.classList.remove('sidebar-open');
+                        }
+                    };
                     chatsList.appendChild(div);
                 });
                 await Promise.all(chatPromises);
@@ -453,19 +1107,7 @@
                     const userData = docSnap.data();
                     if (docSnap.id !== currentUser.uid) {
                         allUsers.push({ id: docSnap.id, ...userData });
-                        const div = document.createElement('div');
-                        div.className = 'chat-item p-3 rounded-xl mb-2 cursor-pointer flex items-center gap-3';
-                        div.innerHTML = `
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
-                                ${userData.username.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="flex-1">
-                                <div class="font-semibold text-white">${userData.username}</div>
-                                <div class="text-xs text-white/60">Click to start chat</div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-white/40"></i>
-                        `;
-                        div.onclick = () => startDirectChat(docSnap.id, userData.username);
+                        const div = createUserElement(docSnap.id, userData);
                         usersList.appendChild(div);
                     }
                 });
@@ -473,6 +1115,89 @@
                     usersList.innerHTML = '<p class="text-white/40 text-sm text-center p-3">No other users yet</p>';
                 }
             });
+        }
+
+        function createUserElement(userId, userData) {
+            const div = document.createElement('div');
+            div.className = 'chat-item user-item p-3 rounded-xl mb-2 cursor-pointer flex items-center gap-3';
+            div.dataset.userId = userId;
+            div.dataset.username = userData.username;
+            div.dataset.email = userData.email || '';
+            div.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold relative">
+                    ${userData.username.charAt(0).toUpperCase()}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-semibold text-white truncate user-name">${userData.username}</div>
+                    <div class="text-xs text-white/60 truncate user-email">${userData.email || ''}</div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-white/40"></i>
+            `;
+            div.onclick = () => {
+                startDirectChat(userId, userData.username);
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('sidebar-open');
+                }
+            };
+            return div;
+        }
+
+        userSearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const userItems = usersList.querySelectorAll('.user-item');
+            let visibleCount = 0;
+
+            userItems.forEach(item => {
+                const username = item.dataset.username.toLowerCase();
+                const email = item.dataset.email.toLowerCase();
+                const nameElement = item.querySelector('.user-name');
+                const emailElement = item.querySelector('.user-email');
+
+                if (username.includes(searchTerm) || email.includes(searchTerm)) {
+                    item.classList.remove('hidden');
+                    visibleCount++;
+                    
+                    if (searchTerm.length > 0) {
+                        highlightText(nameElement, searchTerm);
+                        if (emailElement.textContent) {
+                            highlightText(emailElement, searchTerm);
+                        }
+                    } else {
+                        const userId = item.dataset.userId;
+                        const user = allUsers.find(u => u.id === userId);
+                        if (user) {
+                            nameElement.innerHTML = user.username;
+                            emailElement.innerHTML = user.email || '';
+                        }
+                    }
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            const existingNoResults = usersList.querySelector('.no-results');
+            if (existingNoResults) {
+                existingNoResults.remove();
+            }
+
+            if (visibleCount === 0 && searchTerm.length > 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.innerHTML = `
+                    <i class="fa-solid fa-user-slash"></i>
+                    <div>No users found</div>
+                    <div class="text-xs mt-1">Try a different search term</div>
+                `;
+                usersList.appendChild(noResults);
+            }
+        });
+
+        function highlightText(element, searchTerm) {
+            if (!element || !searchTerm) return;
+            const text = element.textContent;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            const highlighted = text.replace(regex, '<span class="highlight">$1</span>');
+            element.innerHTML = highlighted;
         }
 
         async function startDirectChat(otherUserId, otherUserName) {
@@ -492,7 +1217,6 @@
 
         function toggleChat(chatId, name) {
             if (currentChatId === chatId) {
-                // Close the chat if clicking the same one
                 currentChatId = null;
                 chatHeader.classList.add('hidden');
                 inputArea.classList.add('hidden');
