@@ -606,3 +606,91 @@
         color: white;
     }
 </style>
+
+/* ============================================
+   6 PREMIUM CSS-ONLY UPGRADES
+   ============================================ */
+
+/* 1. Pulsing "Online" Status Dot */
+/* Makes the green dot next to avatars pulse gently to show they are live */
+.chat-item .w-10::after {
+    animation: pulse-dot 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+@keyframes pulse-dot {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* 2. Auto-Hiding Scrollbars */
+/* Scrollbars are invisible until you hover over the chat area or sidebar */
+::-webkit-scrollbar {
+    width: 6px;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease;
+}
+*:hover::-webkit-scrollbar {
+    opacity: 1; /* Shows up on hover */
+}
+/* Firefox support for auto-hiding */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+*:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* 3. Message Bubble Hover "Lift" & Glow */
+/* When you hover over a message, it slightly lifts up and glows */
+.msg-bubble {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+}
+.msg-bubble:hover {
+    transform: translateY(-2px);
+    z-index: 10;
+}
+.sent:hover {
+    box-shadow: 0 8px 25px rgba(0, 168, 132, 0.4) !important;
+}
+.received:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 4. Animated Gradient Border on Active Chat */
+/* The green line next to the selected chat now flows like liquid */
+.active-chat::before {
+    background: linear-gradient(180deg, var(--primary-color), #00d4a8, var(--primary-color)) !important;
+    background-size: 200% 200% !important;
+    animation: flowGradient 3s ease infinite !important;
+    width: 4px !important;
+}
+@keyframes flowGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 5. Smooth Screen Fade-In Animation */
+/* Makes the app and login screen fade in smoothly instead of snapping */
+#app-screen, #login-screen {
+    animation: fadeInScreen 0.5s ease-out forwards;
+}
+@keyframes fadeInScreen {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* 6. Custom Text Selection Color */
+/* When users highlight text to copy it, it uses your app's green theme instead of ugly blue */
+::selection {
+    background: var(--primary-color);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+::-moz-selection {
+    background: var(--primary-color);
+    color: white;
+}
