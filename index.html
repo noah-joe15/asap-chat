@@ -382,6 +382,7 @@
         let unsubscribeMessages = null;
         let unsubscribeTyping = null;
         let isOnline = navigator.onLine;
+        let chatsLoaded = false; // NEW: Flag to prevent duplicate loads
 
         const loginScreen = document.getElementById('login-screen');
         const appScreen = document.getElementById('app-screen');
@@ -441,14 +442,20 @@
             localStorage.setItem('chatThemeColor', e.target.value);
         });
 
+        // FIXED: Only load chats ONCE when user logs in
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
                 loginScreen.classList.add('hidden');
                 appScreen.classList.remove('hidden');
-                loadChats();
+                // Only load chats if we haven't already
+                if (!chatsLoaded) {
+                    loadChats();
+                    chatsLoaded = true;
+                }
             } else {
                 currentUser = null;
+                chatsLoaded = false; // Reset flag on logout
                 loginScreen.classList.remove('hidden');
                 appScreen.classList.add('hidden');
             }
@@ -507,16 +514,39 @@
             return date.toLocaleDateString();
         }
 
+        // FIXED: Completely rewritten to prevent duplicates
         function loadChats() {
-            if (unsubscribeChats) unsubscribeChats();
+            // Cancel any existing listener first
+            if (unsubscribeChats) {
+                unsubscribeChats();
+                unsubscribeChats = null;
+            }
+
             const q = query(collection(db, "chats"), where("members", "array-contains", currentUser.uid));
+            
             unsubscribeChats = onSnapshot(q, async (snapshot) => {
+                // Clear the list completely
                 chatsList.innerHTML = '';
                 knownUsers = [];
                 
-                if (snapshot.empty) chatsList.innerHTML = '<p class="text-white/40 text-sm text-center p-3">No chats yet. Click + to start one!</p>';
+                // Track which chat IDs we've already rendered to prevent duplicates
+                const renderedChatIds = new Set();
                 
+                if (snapshot.empty) {
+                    chatsList.innerHTML = '<p class="text-white/40 text-sm text-center p-3">No chats yet. Click + to start one!</p>';
+                    return;
+                }
+                
+                // Process all chats
                 const chatPromises = snapshot.docs.map(async (docSnap) => {
+                    const chatId = docSnap.id;
+                    
+                    // Skip if we've already rendered this chat ID
+                    if (renderedChatIds.has(chatId)) {
+                        return;
+                    }
+                    renderedChatIds.add(chatId);
+                    
                     const data = docSnap.data();
                     let displayName = data.name;
                     let icon = 'fa-user';
@@ -539,7 +569,7 @@
                     const badgeHtml = unreadCount > 0 ? `<div class="unread-badge">${unreadCount > 99 ? '99+' : unreadCount}</div>` : '';
 
                     const div = document.createElement('div');
-                    div.className = `chat-item p-3 rounded-xl mb-2 cursor-pointer ${currentChatId === docSnap.id ? 'active-chat' : ''}`;
+                    div.className = `chat-item p-3 rounded-xl mb-2 cursor-pointer ${currentChatId === chatId ? 'active-chat' : ''}`;
                     div.innerHTML = `
                         <div class="chat-item-content">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg relative">
@@ -553,11 +583,12 @@
                         ${badgeHtml}
                     `;
                     div.onclick = () => {
-                        toggleChat(docSnap.id, displayName);
+                        toggleChat(chatId, displayName);
                         if (window.innerWidth < 768) sidebar.classList.remove('sidebar-open');
                     };
                     chatsList.appendChild(div);
                 });
+                
                 await Promise.all(chatPromises);
             }, (error) => {
                 console.error("Chat load error:", error);
@@ -568,7 +599,6 @@
             });
         }
 
-        // FIX: Removed loadChats() call from here to prevent duplicates
         function toggleChat(chatId, name) {
             if (currentChatId === chatId) {
                 currentChatId = null; 
@@ -584,7 +614,6 @@
             }
         }
 
-        // FIX: Removed loadChats() call from here to prevent duplicates
         async function openChat(chatId, name) {
             currentChatId = chatId;
             chatHeader.textContent = name; 
