@@ -1,7 +1,4 @@
 <style>
-    /* ============================================
-       1. REFINED COLOR SYSTEM & VISUAL HIERARCHY
-       ============================================ */
     :root {
         --primary-color: #00a884;
         --primary-hover: #00d4a8;
@@ -36,9 +33,6 @@
         -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ============================================
-       5 & 6. SOPHISTICATED GALAXY & COSMIC DEPTH
-       ============================================ */
     .blob {
         position: absolute;
         border-radius: 50%;
@@ -67,7 +61,6 @@
         100% { transform: translate(-10px, 10px) scale(0.98); opacity: 0.25; }
     }
 
-    /* Multi-layered starfield with soft vignette */
     #messages-container {
         position: relative;
         background: 
@@ -90,7 +83,6 @@
         background-size: 2000px 2000px;
     }
 
-    /* Slower, subtler twinkling */
     #messages-container::before {
         content: '';
         position: absolute;
@@ -111,7 +103,6 @@
         100% { opacity: 0.6; }
     }
 
-    /* Nebula overlay + soft vignette for readability */
     #messages-container::after {
         content: '';
         position: absolute;
@@ -130,9 +121,6 @@
         z-index: 1;
     }
 
-    /* ============================================
-       2. PREMIUM FLOATING HEADER
-       ============================================ */
     .glass-header {
         background: var(--glass-bg-heavy);
         backdrop-filter: blur(40px) saturate(200%);
@@ -151,7 +139,6 @@
         color: #ffffff;
     }
 
-    /* Glass capsule action buttons */
     .icon-btn {
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -180,9 +167,6 @@
         transform: translateY(0) scale(0.95);
     }
 
-    /* ============================================
-       3. UPGRADED SIDEBAR & CHAT ITEMS
-       ============================================ */
     .glass-sidebar {
         background: rgba(10, 14, 35, 0.7);
         backdrop-filter: blur(40px) saturate(180%);
@@ -208,7 +192,6 @@
         border-color: rgba(255, 255, 255, 0.06);
     }
 
-    /* Active chat: soft translucent green glass, subtle glow, animated accent */
     .active-chat {
         background: linear-gradient(90deg, rgba(0, 168, 132, 0.12) 0%, rgba(0, 168, 132, 0.02) 100%) !important;
         border-color: rgba(0, 168, 132, 0.25) !important;
@@ -237,7 +220,6 @@
         100% { background-position: 0% 50%; }
     }
 
-    /* Avatar improvements with glass border and glow */
     .chat-item .w-10 {
         background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
         border: 1px solid rgba(255,255,255,0.1);
@@ -250,7 +232,6 @@
         transform: scale(1.02);
     }
 
-    /* Glowing online indicator */
     .chat-item .w-10::after {
         content: '';
         position: absolute;
@@ -271,9 +252,6 @@
         100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
-    /* ============================================
-       4. PREMIUM EMPTY-CHAT EXPERIENCE
-       ============================================ */
     #empty-chat-msg {
         display: flex;
         flex-direction: column;
@@ -312,9 +290,6 @@
         50% { transform: translateY(-6px); }
     }
 
-    /* ============================================
-       7. PREMIUM MESSAGE BUBBLES
-       ============================================ */
     .msg-bubble {
         max-width: 70%;
         word-wrap: break-word;
@@ -400,9 +375,7 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    /* ============================================
-       8. FLOATING GLASS DOCK - MESSAGE INPUT
-       ============================================ */
+    /* FIXED: Added display: flex and flex-shrink: 0 */
     #input-area {
         background: var(--glass-bg-heavy);
         backdrop-filter: blur(40px) saturate(200%);
@@ -413,6 +386,9 @@
         position: relative;
         z-index: 10;
         flex-shrink: 0;
+        display: flex !important;
+        flex-direction: column;
+        gap: 8px;
     }
 
     #message-input {
@@ -442,8 +418,8 @@
         color: rgba(255, 255, 255, 0.35);
     }
 
-    /* Premium Send Button */
-    #message-form button[type="submit"] {
+    /* FIXED: Changed from #message-form button[type="submit"] to #send-btn */
+    #send-btn {
         background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%);
         border: none;
         border-radius: 50%;
@@ -462,7 +438,7 @@
         flex-shrink: 0;
     }
 
-    #message-form button[type="submit"]::before {
+    #send-btn::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -471,33 +447,30 @@
         transition: opacity 0.3s ease;
     }
 
-    #message-form button[type="submit"]:hover {
+    #send-btn:hover {
         transform: translateY(-2px) scale(1.05);
         box-shadow: 
             0 8px 24px rgba(0, 168, 132, 0.4),
             0 0 32px rgba(0, 168, 132, 0.15);
     }
 
-    #message-form button[type="submit"]:hover::before {
+    #send-btn:hover::before {
         opacity: 1;
     }
 
-    #message-form button[type="submit"]:active {
+    #send-btn:active {
         transform: translateY(0) scale(0.95);
         box-shadow: 
             0 2px 8px rgba(0, 168, 132, 0.3),
             0 0 0 3px rgba(0, 168, 132, 0.1);
     }
 
-    #message-form button[type="submit"] i {
+    #send-btn i {
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         position: relative;
         z-index: 1;
     }
 
-    /* ============================================
-       9 & 11. MICRO-INTERACTIONS & LIGHTING
-       ============================================ */
     .btn-primary {
         background: linear-gradient(135deg, var(--primary-color) 0%, #008f6f 100%);
         border: none;
@@ -547,9 +520,6 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    /* ============================================
-       12. REFINED TYPOGRAPHY
-       ============================================ */
     h1, h2, h3 {
         font-weight: 600;
         letter-spacing: -0.02em;
@@ -584,9 +554,6 @@
         text-align: left;
     }
 
-    /* ============================================
-       SCROLLBARS & MODALS
-       ============================================ */
     ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
@@ -677,9 +644,6 @@
         transform: translate(-50%, -50%);
     }
 
-    /* ============================================
-       13 & 14. RESPONSIVENESS & PERFORMANCE
-       ============================================ */
     @media (max-width: 768px) {
         .msg-bubble {
             max-width: 85%;
@@ -694,10 +658,9 @@
         
         #message-input {
             padding: 12px 20px;
-            font-size: 16px; /* Prevents iOS zoom */
+            font-size: 16px;
         }
 
-        /* Reduce blur on mobile for performance */
         .glass-header, .glass-sidebar, #input-area, .glass-card {
             backdrop-filter: blur(20px) saturate(150%);
             -webkit-backdrop-filter: blur(20px) saturate(150%);
@@ -721,7 +684,7 @@
         .glass-header { padding: 8px 16px; }
         #input-area { padding: 8px 16px; }
         .msg-bubble { padding: 8px 12px; }
-        #message-form button[type="submit"] { width: 40px; height: 40px; }
+        #send-btn { width: 40px; height: 40px; }
     }
 
     @supports (padding: env(safe-area-inset-bottom)) {
@@ -730,7 +693,6 @@
         }
     }
 
-    /* Respect reduced motion preferences */
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
             animation-duration: 0.01ms !important;
@@ -739,12 +701,10 @@
         }
     }
 
-    /* Smooth transitions for all interactive elements */
     a, button, input, select, textarea {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Custom text selection */
     ::selection {
         background: rgba(0, 168, 132, 0.3);
         color: white;
