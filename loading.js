@@ -16,7 +16,6 @@ class LoadingManager {
     }
 
     createLoadingScreen() {
-        // Create loading screen HTML
         this.loadingScreen = document.createElement('div');
         this.loadingScreen.id = 'loading-screen';
         this.loadingScreen.style.cssText = `
@@ -26,7 +25,7 @@ class LoadingManager {
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, #0a0e27 0%, #141a3a 50%, #1a1f4a 100%);
-            z-index: 9999;
+            z-index: 99999;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -34,12 +33,10 @@ class LoadingManager {
             transition: opacity 0.5s ease;
         `;
 
-        // Logo/Icon
         const logo = document.createElement('div');
         logo.innerHTML = '<i class="fa-solid fa-comments" style="font-size: 64px; color: #00a884; margin-bottom: 30px; animation: pulse 2s infinite;"></i>';
         this.loadingScreen.appendChild(logo);
 
-        // Loading text
         this.loadingText = document.createElement('div');
         this.loadingText.textContent = 'Loading ASAP Chat...';
         this.loadingText.style.cssText = `
@@ -51,7 +48,6 @@ class LoadingManager {
         `;
         this.loadingScreen.appendChild(this.loadingText);
 
-        // Progress bar container
         const progressContainer = document.createElement('div');
         progressContainer.style.cssText = `
             width: 250px;
@@ -61,7 +57,6 @@ class LoadingManager {
             overflow: hidden;
         `;
 
-        // Progress bar
         this.progressBar = document.createElement('div');
         this.progressBar.style.cssText = `
             width: 0%;
@@ -73,7 +68,6 @@ class LoadingManager {
         progressContainer.appendChild(this.progressBar);
         this.loadingScreen.appendChild(progressContainer);
 
-        // Add pulse animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes pulse {
@@ -82,14 +76,21 @@ class LoadingManager {
             }
         `;
         this.loadingScreen.appendChild(style);
-
         document.body.appendChild(this.loadingScreen);
     }
 
     preloadImages() {
         this.totalImages = this.imagesToLoad.length;
         
-        this.imagesToLoad.forEach((imageSrc, index) => {
+        // SAFETY NET: Force completion after 3 seconds in case of network hang
+        setTimeout(() => {
+            if (this.loadedImages < this.totalImages) {
+                this.loadedImages = this.totalImages;
+                this.updateProgress();
+            }
+        }, 3000);
+
+        this.imagesToLoad.forEach((imageSrc) => {
             const img = new Image();
             img.src = imageSrc;
             
@@ -99,21 +100,19 @@ class LoadingManager {
             };
             
             img.onerror = () => {
-                console.warn(`Failed to load image: ${imageSrc}`);
+                console.warn(`Failed to load image: ${imageSrc} (Continuing anyway)`);
                 this.loadedImages++;
                 this.updateProgress();
             };
         });
 
-        // Start checking if all loaded
         this.checkAllLoaded();
     }
 
     updateProgress() {
-        const progress = (this.loadedImages / this.totalImages) * 100;
+        const progress = Math.min((this.loadedImages / this.totalImages) * 100, 100);
         this.progressBar.style.width = `${progress}%`;
         
-        // Update text based on progress
         if (progress < 30) {
             this.loadingText.textContent = 'Loading assets...';
         } else if (progress < 70) {
@@ -129,7 +128,7 @@ class LoadingManager {
         const checkInterval = setInterval(() => {
             if (this.loadedImages >= this.totalImages) {
                 clearInterval(checkInterval);
-                setTimeout(() => this.hideLoadingScreen(), 500);
+                setTimeout(() => this.hideLoadingScreen(), 300);
             }
         }, 100);
     }
@@ -138,20 +137,12 @@ class LoadingManager {
         this.loadingScreen.style.opacity = '0';
         setTimeout(() => {
             this.loadingScreen.style.display = 'none';
-            // Dispatch custom event when loading is complete
             window.dispatchEvent(new CustomEvent('appReady'));
         }, 500);
     }
-
-    showLoadingScreen() {
-        this.loadingScreen.style.display = 'flex';
-        setTimeout(() => {
-            this.loadingScreen.style.opacity = '1';
-        }, 10);
-    }
 }
 
-// Auto-initialize when DOM is ready
+// Auto-initialize
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         window.loadingManager = new LoadingManager();
