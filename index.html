@@ -2,590 +2,2609 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <meta
+        name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no,
+        viewport-fit=cover"
+    >
+
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <title>ASAP Chat</title>
-    
+
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
-    
-    <!-- Tailwind CSS -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- YOUR SEPARATE CSS FILE -->
+
+    <!-- Main CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <script src="loading.js"></script>
 
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
+<script src="loading.js"></script>
 
-    <div id="update-banner" class="update-banner">
-        <span id="update-message"></span>
-    </div>
-    <div id="connection-banner" class="connection-banner">
-        <i class="fa-solid fa-wifi"></i>
-        <span id="connection-message">Connecting...</span>
-    </div>
+<!-- Background -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
 
-    <div id="login-screen" class="glass-panel flex items-center justify-center fixed inset-0 z-50" style="height: 100%; height: -webkit-fill-available;">
-        <div class="glass-card p-8 rounded-3xl w-80 text-center">
-            <div class="text-4xl mb-4 text-white"><i class="fa-solid fa-comments"></i></div>
-            <h1 class="text-2xl font-bold mb-6 text-white tracking-wide">ASAP Chat</h1>
-            <input id="email-input" type="email" placeholder="Email" class="glass-input w-full p-3 rounded-xl mb-3 text-white placeholder-gray-400">
-            <input id="password-input" type="password" placeholder="Password" class="glass-input w-full p-3 rounded-xl mb-3 text-white placeholder-gray-400">
-            <input id="username-input" type="text" placeholder="Display Name" class="glass-input w-full p-3 rounded-xl mb-6 text-white placeholder-gray-400">
-            <div class="flex gap-3">
-                <button id="login-btn" class="flex-1 btn-primary p-3 rounded-xl font-semibold"><i class="fa-solid fa-right-to-bracket mr-2"></i>Login</button>
-                <button id="signup-btn" class="flex-1 btn-secondary p-3 rounded-xl font-semibold"><i class="fa-solid fa-user-plus mr-2"></i>Sign Up</button>
-            </div>
+<!-- Update -->
+<div id="update-banner" class="update-banner">
+    <span id="update-message"></span>
+</div>
+
+<!-- Connection -->
+<div id="connection-banner" class="connection-banner">
+    <i class="fa-solid fa-wifi"></i>
+    <span id="connection-message">Connecting...</span>
+</div>
+
+
+<!-- =========================================================
+     LOGIN SCREEN
+========================================================= -->
+
+<div
+    id="login-screen"
+    class="glass-panel flex items-center justify-center fixed inset-0 z-50"
+>
+    <div class="glass-card p-8 rounded-3xl w-80 text-center">
+
+        <div class="text-4xl mb-4 text-white">
+            <i class="fa-solid fa-comments"></i>
+        </div>
+
+        <h1 class="text-2xl font-bold mb-6 text-white tracking-wide">
+            ASAP Chat
+        </h1>
+
+        <input
+            id="email-input"
+            type="email"
+            placeholder="Email"
+            class="glass-input w-full p-3 rounded-xl mb-3 text-white placeholder-gray-400"
+        >
+
+        <input
+            id="password-input"
+            type="password"
+            placeholder="Password"
+            class="glass-input w-full p-3 rounded-xl mb-3 text-white placeholder-gray-400"
+        >
+
+        <input
+            id="username-input"
+            type="text"
+            placeholder="Display Name"
+            class="glass-input w-full p-3 rounded-xl mb-6 text-white placeholder-gray-400"
+        >
+
+        <div class="flex gap-3">
+
+            <button
+                id="login-btn"
+                class="flex-1 btn-primary p-3 rounded-xl font-semibold"
+            >
+                <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                Login
+            </button>
+
+            <button
+                id="signup-btn"
+                class="flex-1 btn-secondary p-3 rounded-xl font-semibold"
+            >
+                <i class="fa-solid fa-user-plus mr-2"></i>
+                Sign Up
+            </button>
+
         </div>
     </div>
+</div>
 
-    <div id="app-screen" class="hidden flex flex-col relative z-10" style="height: 100%; height: -webkit-fill-available;">
-        <header class="glass-header p-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-bolt"></i> ASAP Chat</h1>
-            <div class="flex gap-2 items-center">
-                <div class="flex items-center bg-white/20 rounded-full px-3 py-1 mr-2">
-                    <i class="fa-solid fa-palette text-white text-sm mr-2"></i>
-                    <input type="color" id="theme-color-picker" value="#00a884" class="w-6 h-6 rounded-full cursor-pointer border-none bg-transparent">
-                </div>
-                <button id="new-group-btn" class="icon-btn" title="New Group"><i class="fa-solid fa-users"></i></button>
-                <button id="new-dm-btn" class="icon-btn" title="New 1-on-1"><i class="fa-solid fa-user-plus"></i></button>
-                <button id="logout-btn" class="icon-btn text-red-300 hover:text-red-500" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
+
+<div id="app-screen" class="app-screen hidden">
+
+    <!-- =====================================================
+         TOP HEADER
+    ====================================================== -->
+
+    <header class="glass-header app-header">
+
+        <div class="header-left">
+
+            <!-- Mobile menu -->
+            <button
+                id="mobile-menu-btn"
+                class="mobile-menu-btn"
+                title="Chats"
+            >
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <h1>
+                <i class="fa-solid fa-bolt"></i>
+                <span>ASAP Chat</span>
+            </h1>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <div class="theme-picker-wrapper">
+
+                <i class="fa-solid fa-palette"></i>
+
+                <input
+                    type="color"
+                    id="theme-color-picker"
+                    value="#00a884"
+                >
+
             </div>
-        </header>
 
-        <div class="flex flex-1 overflow-hidden" style="min-height: 0;">
-            <aside id="sidebar" class="w-1/3 glass-sidebar overflow-y-auto">
-                <div class="p-3 border-b border-white/10 mb-2">
-                    <h3 class="text-sm font-semibold text-white/70 uppercase tracking-wider"><i class="fa-solid fa-comments mr-2"></i>Your Chats</h3>
-                </div>
-                <div id="chats-list" class="p-3"></div>
-            </aside>
+            <button
+                id="new-group-btn"
+                class="icon-btn"
+                title="New Group"
+            >
+                <i class="fa-solid fa-users"></i>
+            </button>
 
-            <main class="flex flex-col relative w-full h-full" style="overflow: hidden;">
-                <div id="chat-header" class="glass-header p-4 font-semibold text-lg text-white border-b border-white/10 hidden"></div>
-                <div id="messages-container" class="flex-1 overflow-y-auto p-4 chat-container flex flex-col gap-2" style="min-height: 0;">
-                    <p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging<br><span class="text-sm">Use the + button to find someone by their exact username</span></p>
-                </div>
-                
-                <!-- NO INLINE STYLES HERE. Tailwind 'hidden' class controls visibility. -->
-                <div id="input-area" class="glass-header p-4 border-t border-white/10" style="display: none;">
-                    <div id="typing-indicator" class="typing-indicator hidden"></div>
-                    <div id="voice-controls" class="voice-controls flex items-center gap-2 w-full">
-                        <button id="mic-btn" class="mic-btn flex" title="Record Voice Note"><i class="fa-solid fa-microphone"></i></button>
-                        <span id="recording-timer" class="recording-timer hidden">0:00</span>
-                        <button id="cancel-rec-btn" class="cancel-rec-btn hidden" title="Cancel"><i class="fa-solid fa-xmark"></i></button>
-                        <input id="message-input" type="text" placeholder="Type a message..." class="glass-input flex-1 p-3 rounded-full text-white placeholder-gray-400 block">
-                        <button id="send-btn" class="btn-primary w-12 h-12 rounded-full flex items-center justify-center text-white text-lg"><i class="fa-solid fa-paper-plane"></i></button>
+            <button
+                id="new-dm-btn"
+                class="icon-btn"
+                title="New 1-on-1"
+            >
+                <i class="fa-solid fa-user-plus"></i>
+            </button>
+
+            <button
+                id="logout-btn"
+                class="icon-btn logout-button"
+                title="Logout"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN LAYOUT
+    ====================================================== -->
+
+    <div class="app-body">
+
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside id="sidebar" class="glass-sidebar">
+
+            <div class="sidebar-title">
+
+                <h3>
+                    <i class="fa-solid fa-comments"></i>
+                    Your Chats
+                </h3>
+
+            </div>
+
+            <div id="chats-list" class="chats-list"></div>
+
+        </aside>
+
+
+        <!-- =================================================
+             MOBILE OVERLAY
+        ================================================== -->
+
+        <div
+            id="sidebar-overlay"
+            class="sidebar-overlay"
+        ></div>
+
+
+        <!-- =================================================
+             CHAT AREA
+        ================================================== -->
+
+        <main class="chat-main">
+
+
+            <!-- CHAT HEADER -->
+
+            <div
+                id="chat-header"
+                class="chat-header hidden"
+            >
+                <div class="chat-header-info">
+
+                    <button
+                        id="mobile-back-btn"
+                        class="mobile-back-btn"
+                    >
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+
+                    <div class="chat-header-avatar">
+                        <i class="fa-solid fa-user"></i>
                     </div>
+
+                    <div
+                        id="chat-header-name"
+                        class="chat-header-name"
+                    ></div>
+
                 </div>
-            </main>
-        </div>
-        <button id="sidebar-toggle" class="sidebar-toggle"><i class="fa-solid fa-comments"></i></button>
-    </div>
-
-    <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="glass-card p-6 rounded-3xl w-96 max-h-[80vh] overflow-y-auto">
-            <h2 id="modal-title" class="text-xl font-bold mb-4 text-white"></h2>
-            <div id="modal-content"></div>
-            <div class="flex justify-end gap-3 mt-4">
-                <button id="modal-cancel" class="px-4 py-2 text-white/70 hover:text-white">Cancel</button>
-                <button id="modal-save" class="btn-primary px-6 py-2 rounded-xl text-white font-semibold">Create</button>
             </div>
-        </div>
+
+
+            <!-- =================================================
+                 MESSAGES
+            ================================================== -->
+
+            <div
+                id="messages-container"
+                class="messages-container"
+            >
+
+                <div
+                    id="empty-chat-msg"
+                    class="empty-chat-message"
+                >
+
+                    <i class="fa-regular fa-comments"></i>
+
+                    <div>
+                        Select a chat to start messaging
+                    </div>
+
+                    <span>
+                        Use the + button to find someone by their exact username
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 INPUT AREA
+            ================================================== -->
+
+            <div
+                id="input-area"
+                class="input-area"
+            >
+
+                <div
+                    id="typing-indicator"
+                    class="typing-indicator hidden"
+                ></div>
+
+
+                <div
+                    id="voice-controls"
+                    class="voice-controls"
+                >
+
+                    <!-- MICROPHONE -->
+
+                    <button
+                        id="mic-btn"
+                        class="mic-btn"
+                        title="Record Voice Note"
+                        type="button"
+                    >
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+
+
+                    <!-- RECORDING TIMER -->
+
+                    <span
+                        id="recording-timer"
+                        class="recording-timer hidden"
+                    >
+                        0:00
+                    </span>
+
+
+                    <!-- CANCEL RECORDING -->
+
+                    <button
+                        id="cancel-rec-btn"
+                        class="cancel-rec-btn hidden"
+                        title="Cancel"
+                        type="button"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+
+                    <!-- MESSAGE INPUT -->
+
+                    <input
+                        id="message-input"
+                        type="text"
+                        autocomplete="off"
+                        enterkeyhint="send"
+                        placeholder="Type a message..."
+                        class="message-input"
+                    >
+
+
+                    <!-- SEND -->
+
+                    <button
+                        id="send-btn"
+                        class="send-btn"
+                        type="button"
+                        title="Send message"
+                    >
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </main>
+
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, getDoc, getDocs, updateDoc, increment, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const APP_VERSION = "1.1.0";
+    <!-- OLD SIDEBAR TOGGLE -->
+    <button
+        id="sidebar-toggle"
+        class="sidebar-toggle"
+    >
+        <i class="fa-solid fa-comments"></i>
+    </button>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCEMqKLVJnjEwTGe3XKGzsVZqrrr2gU4xg",
-            authDomain: "asap-chat-a4d31.firebaseapp.com",
-            projectId: "asap-chat-a4d31",
-            storageBucket: "asap-chat-a4d31.firebasestorage.app",
-            messagingSenderId: "1099390805568",
-            appId: "1:1099390805568:web:4ef8fbc076c9940465e1a5"
-        };
+</div>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
 
-        const notificationSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
-        notificationSound.volume = 0.5;
+<!-- =========================================================
+     MODAL
+========================================================= -->
 
-        let currentUser = null;
-        let currentChatId = null;
-        let knownUsers = [];
-        let unsubscribeChats = null;
-        let unsubscribeMessages = null;
-        let unsubscribeTyping = null;
-        let isOnline = navigator.onLine;
-        let chatsLoaded = false;
+<div
+    id="modal"
+    class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm items-center justify-center z-50"
+>
 
-        const loginScreen = document.getElementById('login-screen');
-        const appScreen = document.getElementById('app-screen');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebar-toggle');
-        const emailInput = document.getElementById('email-input');
-        const passwordInput = document.getElementById('password-input');
-        const usernameInput = document.getElementById('username-input');
-        const loginBtn = document.getElementById('login-btn');
-        const signupBtn = document.getElementById('signup-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const colorPicker = document.getElementById('theme-color-picker');
-        const chatsList = document.getElementById('chats-list');
-        const chatHeader = document.getElementById('chat-header');
-        const messagesContainer = document.getElementById('messages-container');
-        const emptyChatMsg = document.getElementById('empty-chat-msg');
-        const inputArea = document.getElementById('input-area');
-        const messageInput = document.getElementById('message-input');
-        const sendBtn = document.getElementById('send-btn');
-        const typingIndicator = document.getElementById('typing-indicator');
-        const modal = document.getElementById('modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalContent = document.getElementById('modal-content');
-        const connectionBanner = document.getElementById('connection-banner');
-        const connectionMessage = document.getElementById('connection-message');
-        const updateBanner = document.getElementById('update-banner');
-        const updateMessage = document.getElementById('update-message');
-        const micBtn = document.getElementById('mic-btn');
-        const cancelRecBtn = document.getElementById('cancel-rec-btn');
-        const recordingTimer = document.getElementById('recording-timer');
-        const newGroupBtn = document.getElementById('new-group-btn');
-        const newDmBtn = document.getElementById('new-dm-btn');
-        const modalCancel = document.getElementById('modal-cancel');
-        const modalSave = document.getElementById('modal-save');
+    <div class="glass-card p-6 rounded-3xl w-96 max-w-[92vw] max-h-[80vh] overflow-y-auto">
 
-        let mediaRecorder;
-        let audioChunks = [];
-        let recordingInterval;
-        let recordingSeconds = 0;
-        const MAX_RECORDING_SECONDS = 30;
+        <h2
+            id="modal-title"
+            class="text-xl font-bold mb-4 text-white"
+        ></h2>
 
-        window.addEventListener('appReady', () => {
-            function setVH() {
-                let vh = window.innerHeight * 0.01;
-                document.documentElement.style.setProperty('--vh', `${vh}px`);
-            }
-            setVH();
-            window.addEventListener('resize', setVH);
-            window.addEventListener('orientationchange', () => setTimeout(setVH, 100));
+        <div id="modal-content"></div>
 
-            if (localStorage.getItem('appVersion') !== APP_VERSION) {
-                updateBanner.classList.add('show');
-                updateMessage.innerHTML = ' <strong>New Update!</strong> Voice notes added & duplicates fixed. <button id="refresh-app-btn" class="update-btn">Refresh Now</button>';
-                const refreshBtn = document.getElementById('refresh-app-btn');
-                if (refreshBtn) {
-                    refreshBtn.onclick = () => {
-                        localStorage.setItem('appVersion', APP_VERSION);
-                        window.location.reload(true);
-                    };
-                }
-            }
+        <div class="flex justify-end gap-3 mt-4">
 
-            function updateConnectionStatus(online) {
-                isOnline = online;
-                if (online) {
-                    connectionBanner.className = 'connection-banner online show';
-                    connectionMessage.textContent = 'Connected';
-                    setTimeout(() => connectionBanner.classList.remove('show'), 2000);
-                } else {
-                    connectionBanner.className = 'connection-banner offline show';
-                    connectionMessage.textContent = 'No Internet Connection - Messages will sync when back online';
-                }
-            }
-            window.addEventListener('online', () => updateConnectionStatus(true));
-            window.addEventListener('offline', () => updateConnectionStatus(false));
-            if (!navigator.onLine) updateConnectionStatus(false);
+            <button
+                id="modal-cancel"
+                class="px-4 py-2 text-white/70 hover:text-white"
+            >
+                Cancel
+            </button>
 
-            sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('sidebar-open'));
-            document.addEventListener('click', (e) => {
-                if (window.innerWidth < 768 && !sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-                    sidebar.classList.remove('sidebar-open');
-                }
-            });
+            <button
+                id="modal-save"
+                class="btn-primary px-6 py-2 rounded-xl text-white font-semibold"
+            >
+                Create
+            </button>
 
-            const savedColor = localStorage.getItem('chatThemeColor');
-            if (savedColor) { document.documentElement.style.setProperty('--primary-color', savedColor); colorPicker.value = savedColor; }
-            colorPicker.addEventListener('input', (e) => {
-                document.documentElement.style.setProperty('--primary-color', e.target.value);
-                localStorage.setItem('chatThemeColor', e.target.value);
-            });
+        </div>
 
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUser = user;
-                    loginScreen.classList.add('hidden');
-                    appScreen.classList.remove('hidden');
-                    if (!chatsLoaded) { loadChats(); chatsLoaded = true; }
-                } else {
-                    currentUser = null;
-                    chatsLoaded = false;
-                    loginScreen.classList.remove('hidden');
-                    appScreen.classList.add('hidden');
-                }
-            });
+    </div>
 
-            signupBtn.onclick = async () => {
-                const email = emailInput.value.trim(), password = passwordInput.value.trim(), name = usernameInput.value.trim();
-                if (!email || !password || !name) return alert("Please fill in all fields.");
-                try {
-                    const userCred = await createUserWithEmailAndPassword(auth, email, password);
-                    await setDoc(doc(db, "users", userCred.user.uid), { username: name, email: email, createdAt: serverTimestamp() });
-                } catch (e) { alert(e.code === 'auth/network-request-failed' ? "Network error. Check connection." : "Sign Up Error: " + e.message); }
-            };
+</div>
 
-            loginBtn.onclick = async () => {
-                const email = emailInput.value.trim(), password = passwordInput.value.trim();
-                if (!email || !password) return alert("Please enter email and password.");
-                try {
-                    await signInWithEmailAndPassword(auth, email, password);
-                } catch (e) { alert(e.code === 'auth/network-request-failed' ? "Network error. Check connection." : "Login Error: " + e.message); }
-            };
 
-            logoutBtn.onclick = () => {
-                signOut(auth).then(() => {
-                    if (unsubscribeChats) unsubscribeChats();
-                    if (unsubscribeMessages) unsubscribeMessages();
-                    if (unsubscribeTyping) unsubscribeTyping();
-                });
-            };
+<!-- =========================================================
+     FIREBASE
+========================================================= -->
 
-            function getSmartTime(timestamp) {
-                if (!timestamp) return '';
-                const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-                const now = new Date();
-                const diffMs = now - date;
-                const diffMins = Math.floor(diffMs / 60000);
-                const diffHours = Math.floor(diffMs / 3600000);
-                const diffDays = Math.floor(diffMs / 86400000);
-                if (diffMins < 1) return 'Just now';
-                if (diffMins < 60) return `${diffMins}m ago`;
-                if (diffHours < 24) return `${diffHours}h ago`;
-                if (diffDays === 1) return 'Yesterday';
-                return date.toLocaleDateString();
-            }
+<script type="module">
 
-            function loadChats() {
-                if (unsubscribeChats) { unsubscribeChats(); unsubscribeChats = null; }
-                const q = query(collection(db, "chats"), where("members", "array-contains", currentUser.uid));
-                unsubscribeChats = onSnapshot(q, async (snapshot) => {
-                    chatsList.innerHTML = '';
-                    knownUsers = [];
-                    const chatMap = new Map();
-                    if (snapshot.empty) {
-                        chatsList.innerHTML = '<p class="text-white/40 text-sm text-center p-3">No chats yet. Click + to start one!</p>';
-                        return;
-                    }
-                    for (const docSnap of snapshot.docs) {
-                        if (!chatMap.has(docSnap.id)) chatMap.set(docSnap.id, docSnap);
-                    }
-                    const renderPromises = Array.from(chatMap.values()).map(async (docSnap) => {
-                        const data = docSnap.data();
-                        let displayName = data.name, icon = 'fa-user', otherUserId = null;
-                        if (data.type === 'direct') {
-                            otherUserId = data.members.find(m => m !== currentUser.uid);
-                            const otherUserDoc = await getDoc(doc(db, "users", otherUserId));
-                            if (otherUserDoc.exists()) {
-                                displayName = otherUserDoc.data().username;
-                                knownUsers.push({ id: otherUserId, username: displayName });
-                            } else { displayName = "Unknown User"; }
-                        } else { icon = 'fa-users'; }
-                        const unreadCount = data.unreadCounts?.[currentUser.uid] || 0;
-                        const badgeHtml = unreadCount > 0 ? `<div class="unread-badge">${unreadCount > 99 ? '99+' : unreadCount}</div>` : '';
-                        const div = document.createElement('div');
-                        div.className = `chat-item p-3 rounded-xl mb-2 cursor-pointer ${currentChatId === docSnap.id ? 'active-chat' : ''}`;
-                        div.innerHTML = `<div class="chat-item-content"><div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg relative"><i class="fa-solid ${icon}"></i></div><div class="flex-1 min-w-0"><div class="font-semibold text-white truncate">${displayName}</div><div class="text-xs text-white/60">${data.type === 'group' ? 'Group Chat' : 'Direct Message'}</div></div></div>${badgeHtml}`;
-                        div.onclick = () => { toggleChat(docSnap.id, displayName); if (window.innerWidth < 768) sidebar.classList.remove('sidebar-open'); };
-                        chatsList.appendChild(div);
-                    });
-                    await Promise.all(renderPromises);
-                }, (error) => {
-                    if (error.code === 'unavailable' || error.message?.includes('proxy')) {
-                        connectionBanner.className = 'connection-banner error show';
-                        connectionMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Connection failed. Check proxy/VPN.';
-                    }
-                });
-            }
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-            async function openChat(chatId, name) {
-    currentChatId = chatId;
-    chatHeader.textContent = name; 
-    chatHeader.style.display = 'flex'; 
-    inputArea.style.display = 'flex'; 
-    emptyChatMsg.classList.add('hidden');
-    
-    const chatRef = doc(db, "chats", chatId);
-    await updateDoc(chatRef, { [`unreadCounts.${currentUser.uid}`]: 0 });
-    if (unsubscribeMessages) unsubscribeMessages();
-    if (unsubscribeTyping) unsubscribeTyping();
-    messagesContainer.innerHTML = '';
-    const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-    let isInitialMessageLoad = true;
-    unsubscribeMessages = onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
-        if (isInitialMessageLoad) {
-            snapshot.forEach((docSnap) => renderMessage(docSnap));
-            isInitialMessageLoad = false;
-        } else {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === "added") {
-                    renderMessage(change.doc);
-                    const msg = change.doc.data();
-                    if (msg.senderId !== currentUser.uid) {
-                        notificationSound.currentTime = 0;
-                        notificationSound.play().catch(() => {});
-                    }
-                }
-            });
-        }
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    });
-    unsubscribeTyping = onSnapshot(chatRef, (docSnap) => {
-        if(docSnap.exists()) {
-            const data = docSnap.data();
-            const typingData = data.typing || {};
-            const otherUserIds = data.members.filter(uid => uid !== currentUser.uid);
-            let typingUsers = [];
-            otherUserIds.forEach(uid => {
-                if(typingData[uid] && typingData[uid].seconds) {
-                    const lastTyped = typingData[uid].seconds * 1000;
-                    if((Date.now() - lastTyped) < 3000) {
-                        const user = knownUsers.find(u => u.id === uid);
-                        if(user) typingUsers.push(user.username);
-                    }
-                }
-            });
-            if(typingUsers.length > 0) {
-                typingIndicator.textContent = `${typingUsers.join(', ')} ${typingUsers.length === 1 ? 'is' : 'are'} typing...`;
-                typingIndicator.style.display = 'block';
-            } else { typingIndicator.style.display = 'none'; }
-        }
-    });
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    doc,
+    setDoc,
+    addDoc,
+    onSnapshot,
+    query,
+    where,
+    orderBy,
+    serverTimestamp,
+    getDoc,
+    getDocs,
+    updateDoc,
+    increment,
+    deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const APP_VERSION = "1.2.0";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCEMqKLVJnjEwTGe3XKGzsVZqrrr2gU4xg",
+    authDomain: "asap-chat-a4d31.firebaseapp.com",
+    projectId: "asap-chat-a4d31",
+    storageBucket: "asap-chat-a4d31.firebasestorage.app",
+    messagingSenderId: "1099390805568",
+    appId: "1:1099390805568:web:4ef8fbc076c9940465e1a5"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+const notificationSound = new Audio(
+    "https://actions.google.com/sounds/v1/cartoon/pop.ogg"
+);
+
+notificationSound.volume = 0.5;
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+let currentChatId = null;
+
+let knownUsers = [];
+
+let unsubscribeChats = null;
+let unsubscribeMessages = null;
+let unsubscribeTyping = null;
+
+let isOnline = navigator.onLine;
+let chatsLoaded = false;
+
+let mediaRecorder = null;
+let audioChunks = [];
+
+let recordingInterval = null;
+let recordingSeconds = 0;
+
+const MAX_RECORDING_SECONDS = 30;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const loginScreen = document.getElementById("login-screen");
+const appScreen = document.getElementById("app-screen");
+
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebar-toggle");
+const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+const sidebarOverlay = document.getElementById("sidebar-overlay");
+const mobileBackBtn = document.getElementById("mobile-back-btn");
+
+const emailInput = document.getElementById("email-input");
+const passwordInput = document.getElementById("password-input");
+const usernameInput = document.getElementById("username-input");
+
+const loginBtn = document.getElementById("login-btn");
+const signupBtn = document.getElementById("signup-btn");
+const logoutBtn = document.getElementById("logout-btn");
+
+const colorPicker = document.getElementById("theme-color-picker");
+
+const chatsList = document.getElementById("chats-list");
+
+const chatHeader = document.getElementById("chat-header");
+const chatHeaderName = document.getElementById("chat-header-name");
+
+const messagesContainer = document.getElementById("messages-container");
+const emptyChatMsg = document.getElementById("empty-chat-msg");
+
+const inputArea = document.getElementById("input-area");
+const messageInput = document.getElementById("message-input");
+const sendBtn = document.getElementById("send-btn");
+
+const typingIndicator = document.getElementById("typing-indicator");
+
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modal-title");
+const modalContent = document.getElementById("modal-content");
+
+const connectionBanner = document.getElementById("connection-banner");
+const connectionMessage = document.getElementById("connection-message");
+
+const updateBanner = document.getElementById("update-banner");
+const updateMessage = document.getElementById("update-message");
+
+const micBtn = document.getElementById("mic-btn");
+const cancelRecBtn = document.getElementById("cancel-rec-btn");
+const recordingTimer = document.getElementById("recording-timer");
+
+const newGroupBtn = document.getElementById("new-group-btn");
+const newDmBtn = document.getElementById("new-dm-btn");
+
+const modalCancel = document.getElementById("modal-cancel");
+const modalSave = document.getElementById("modal-save");
+
+
+/* =========================================================
+   MOBILE VIEWPORT
+========================================================= */
+
+function setAppHeight() {
+
+    const height = window.visualViewport
+        ? window.visualViewport.height
+        : window.innerHeight;
+
+    document.documentElement.style.setProperty(
+        "--app-height",
+        `${height}px`
+    );
 }
 
-            function renderMessage(docSnap) {
-                const msg = docSnap.data();
-                const isMe = msg.senderId === currentUser.uid;
-                const bubble = document.createElement('div');
-                bubble.className = `msg-bubble p-3 ${isMe ? 'sent' : 'received'}`;
-                let deleteBtn = isMe ? `<button class="delete-msg-btn" data-id="${docSnap.id}" title="Delete"><i class="fa-solid fa-trash-can"></i></button>` : '';
-                let contentHtml = '';
-                
-                if (msg.type === 'voice') {
-                    contentHtml = `${!isMe ? `<div class="text-xs font-bold mb-1 opacity-75">${msg.senderName}</div>` : ''}<audio controls src="${msg.audioData}" class="voice-note-player"></audio>`;
-                } else {
-                    contentHtml = `${!isMe ? `<div class="text-xs font-bold mb-1 opacity-75">${msg.senderName}</div>` : ''}<div>${msg.text}</div>`;
+
+setAppHeight();
+
+window.addEventListener("resize", setAppHeight);
+
+window.addEventListener("orientationchange", () => {
+    setTimeout(setAppHeight, 300);
+});
+
+if (window.visualViewport) {
+
+    window.visualViewport.addEventListener(
+        "resize",
+        setAppHeight
+    );
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function openSidebar() {
+
+    sidebar.classList.add("sidebar-open");
+    sidebarOverlay.classList.add("show");
+
+}
+
+
+function closeSidebar() {
+
+    sidebar.classList.remove("sidebar-open");
+    sidebarOverlay.classList.remove("show");
+
+}
+
+
+mobileMenuBtn.addEventListener(
+    "click",
+    openSidebar
+);
+
+
+sidebarToggle.addEventListener(
+    "click",
+    openSidebar
+);
+
+
+sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+);
+
+
+mobileBackBtn.addEventListener(
+    "click",
+    openSidebar
+);
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+const savedColor = localStorage.getItem("chatThemeColor");
+
+if (savedColor) {
+
+    document.documentElement.style.setProperty(
+        "--primary-color",
+        savedColor
+    );
+
+    colorPicker.value = savedColor;
+}
+
+
+colorPicker.addEventListener("input", e => {
+
+    const color = e.target.value;
+
+    document.documentElement.style.setProperty(
+        "--primary-color",
+        color
+    );
+
+    localStorage.setItem(
+        "chatThemeColor",
+        color
+    );
+
+});
+
+
+/* =========================================================
+   CONNECTION
+========================================================= */
+
+function updateConnectionStatus(online) {
+
+    isOnline = online;
+
+    if (online) {
+
+        connectionBanner.className =
+            "connection-banner online show";
+
+        connectionMessage.textContent =
+            "Connected";
+
+        setTimeout(() => {
+
+            connectionBanner.classList.remove("show");
+
+        }, 2000);
+
+    } else {
+
+        connectionBanner.className =
+            "connection-banner offline show";
+
+        connectionMessage.textContent =
+            "No Internet Connection";
+
+    }
+
+}
+
+
+window.addEventListener(
+    "online",
+    () => updateConnectionStatus(true)
+);
+
+window.addEventListener(
+    "offline",
+    () => updateConnectionStatus(false)
+);
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+window.addEventListener("appReady", () => {
+
+    if (
+        localStorage.getItem("appVersion") !==
+        APP_VERSION
+    ) {
+
+        updateBanner.classList.add("show");
+
+        updateMessage.innerHTML =
+            `<strong>New Update!</strong>
+             Mobile chat layout fixed.
+             <button id="refresh-app-btn"
+                     class="update-btn">
+                 Refresh Now
+             </button>`;
+
+        const refreshBtn =
+            document.getElementById(
+                "refresh-app-btn"
+            );
+
+        if (refreshBtn) {
+
+            refreshBtn.onclick = () => {
+
+                localStorage.setItem(
+                    "appVersion",
+                    APP_VERSION
+                );
+
+                window.location.reload();
+
+            };
+
+        }
+
+    }
+
+
+    onAuthStateChanged(
+        auth,
+        user => {
+
+            if (user) {
+
+                currentUser = user;
+
+                loginScreen.classList.add("hidden");
+
+                appScreen.classList.remove("hidden");
+
+                if (!chatsLoaded) {
+
+                    loadChats();
+
+                    chatsLoaded = true;
+
                 }
-                
-                bubble.innerHTML = `${deleteBtn}${contentHtml}<span class="msg-time">${getSmartTime(msg.timestamp)}</span>`;
-                messagesContainer.appendChild(bubble);
+
+            } else {
+
+                currentUser = null;
+
+                chatsLoaded = false;
+
+                loginScreen.classList.remove("hidden");
+
+                appScreen.classList.add("hidden");
+
             }
 
-            messagesContainer.addEventListener('click', async (e) => {
-                const deleteBtn = e.target.closest('.delete-msg-btn');
-                if (deleteBtn && currentChatId) {
-                    if(confirm("Delete this message?")) {
-                        try { await deleteDoc(doc(db, "chats", currentChatId, "messages", deleteBtn.dataset.id)); } 
-                        catch (e) { alert("Failed to delete. Check connection."); }
-                    }
-                }
-            });
+        }
+    );
 
-            micBtn.addEventListener('click', async () => {
-                if (micBtn.classList.contains('recording')) {
-                    stopRecording();
-                } else {
-                    try {
-                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                        mediaRecorder = new MediaRecorder(stream);
-                        audioChunks = [];
-                        recordingSeconds = 0;
-                        
-                        mediaRecorder.ondataavailable = (event) => { if (event.data.size > 0) audioChunks.push(event.data); };
-                        mediaRecorder.onstop = async () => {
-                            stream.getTracks().forEach(track => track.stop());
-                            if (audioChunks.length > 0) {
-                                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                                const reader = new FileReader();
-                                reader.readAsDataURL(audioBlob);
-                                reader.onloadend = async () => {
-                                    const base64Audio = reader.result;
-                                    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-                                    const senderName = userDoc.exists() ? userDoc.data().username : "User";
-                                    await addDoc(collection(db, "chats", currentChatId, "messages"), {
-                                        type: 'voice', audioData: base64Audio, senderId: currentUser.uid, senderName: senderName, timestamp: serverTimestamp()
-                                    });
-                                    updateDoc(doc(db, "chats", currentChatId), { [`typing.${currentUser.uid}`]: null }).catch(() => {});
-                                    const chatRef = doc(db, "chats", currentChatId);
-                                    const chatSnap = await getDoc(chatRef);
-                                    const updates = {};
-                                    chatSnap.data().members.forEach(uid => { if (uid !== currentUser.uid) updates[`unreadCounts.${uid}`] = increment(1); });
-                                    await updateDoc(chatRef, updates);
-                                };
+});
+
+
+/* =========================================================
+   SIGN UP
+========================================================= */
+
+signupBtn.onclick = async () => {
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value.trim();
+
+    const name =
+        usernameInput.value.trim();
+
+
+    if (!email || !password || !name) {
+
+        alert(
+            "Please fill in all fields."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const userCred =
+            await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+
+        await setDoc(
+            doc(
+                db,
+                "users",
+                userCred.user.uid
+            ),
+            {
+                username: name,
+                email: email,
+                createdAt: serverTimestamp()
+            }
+        );
+
+    } catch (e) {
+
+        alert(
+            e.code ===
+            "auth/network-request-failed"
+                ? "Network error. Check connection."
+                : "Sign Up Error: " + e.message
+        );
+
+    }
+
+};
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+loginBtn.onclick = async () => {
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value.trim();
+
+
+    if (!email || !password) {
+
+        alert(
+            "Please enter email and password."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+    } catch (e) {
+
+        alert(
+            e.code ===
+            "auth/network-request-failed"
+                ? "Network error. Check connection."
+                : "Login Error: " + e.message
+        );
+
+    }
+
+};
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+logoutBtn.onclick = async () => {
+
+    await signOut(auth);
+
+    if (unsubscribeChats)
+        unsubscribeChats();
+
+    if (unsubscribeMessages)
+        unsubscribeMessages();
+
+    if (unsubscribeTyping)
+        unsubscribeTyping();
+
+};
+
+
+/* =========================================================
+   ENTER TO SEND
+========================================================= */
+
+messageInput.addEventListener(
+    "keydown",
+    e => {
+
+        if (
+            e.key === "Enter" &&
+            !e.shiftKey
+        ) {
+
+            e.preventDefault();
+
+            sendBtn.click();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SMART TIME
+========================================================= */
+
+function getSmartTime(timestamp) {
+
+    if (!timestamp)
+        return "";
+
+    const date =
+        timestamp.toDate
+            ? timestamp.toDate()
+            : new Date(timestamp);
+
+    const now = new Date();
+
+    const diffMs =
+        now - date;
+
+    const diffMins =
+        Math.floor(diffMs / 60000);
+
+    const diffHours =
+        Math.floor(diffMs / 3600000);
+
+    const diffDays =
+        Math.floor(diffMs / 86400000);
+
+
+    if (diffMins < 1)
+        return "Just now";
+
+    if (diffMins < 60)
+        return `${diffMins}m ago`;
+
+    if (diffHours < 24)
+        return `${diffHours}h ago`;
+
+    if (diffDays === 1)
+        return "Yesterday";
+
+    return date.toLocaleDateString();
+
+}
+
+
+/* =========================================================
+   LOAD CHATS
+========================================================= */
+
+function loadChats() {
+
+    if (unsubscribeChats) {
+
+        unsubscribeChats();
+
+        unsubscribeChats = null;
+
+    }
+
+
+    const q = query(
+        collection(db, "chats"),
+        where(
+            "members",
+            "array-contains",
+            currentUser.uid
+        )
+    );
+
+
+    unsubscribeChats =
+        onSnapshot(
+            q,
+            async snapshot => {
+
+                chatsList.innerHTML = "";
+
+                knownUsers = [];
+
+
+                if (snapshot.empty) {
+
+                    chatsList.innerHTML =
+                        `<p class="no-chats">
+                            No chats yet.
+                            Click + to start one!
+                         </p>`;
+
+                    return;
+
+                }
+
+
+                const renderPromises =
+                    snapshot.docs.map(
+                        async docSnap => {
+
+                            const data =
+                                docSnap.data();
+
+                            let displayName =
+                                data.name ||
+                                "Chat";
+
+                            let icon =
+                                "fa-user";
+
+                            let otherUserId =
+                                null;
+
+
+                            if (
+                                data.type ===
+                                "direct"
+                            ) {
+
+                                otherUserId =
+                                    data.members.find(
+                                        m =>
+                                            m !==
+                                            currentUser.uid
+                                    );
+
+
+                                if (otherUserId) {
+
+                                    const userDoc =
+                                        await getDoc(
+                                            doc(
+                                                db,
+                                                "users",
+                                                otherUserId
+                                            )
+                                        );
+
+
+                                    if (
+                                        userDoc.exists()
+                                    ) {
+
+                                        displayName =
+                                            userDoc.data()
+                                                .username;
+
+                                        knownUsers.push({
+                                            id:
+                                                otherUserId,
+                                            username:
+                                                displayName
+                                        });
+
+                                    } else {
+
+                                        displayName =
+                                            "Unknown User";
+
+                                    }
+
+                                }
+
+                            } else {
+
+                                icon = "fa-users";
+
                             }
-                            resetVoiceUI();
-                        };
-                        
-                        mediaRecorder.start();
-                        micBtn.classList.add('recording');
-                        micBtn.innerHTML = '<i class="fa-solid fa-stop"></i>';
-                        cancelRecBtn.classList.remove('hidden');
-                        recordingTimer.classList.remove('hidden');
-                        
-                        recordingInterval = setInterval(() => {
-                            recordingSeconds++;
-                            const mins = Math.floor(recordingSeconds / 60);
-                            const secs = recordingSeconds % 60;
-                            recordingTimer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-                            if (recordingSeconds >= MAX_RECORDING_SECONDS) stopRecording();
-                        }, 1000);
-                    } catch (err) {
-                        alert("Microphone access denied or not available.");
-                    }
-                }
-            });
 
-            cancelRecBtn.addEventListener('click', () => {
-                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                    mediaRecorder.stop();
-                    mediaRecorder.stream.getTracks().forEach(track => track.stop());
-                }
-                resetVoiceUI();
-            });
 
-            function resetVoiceUI() {
-                clearInterval(recordingInterval);
-                micBtn.classList.remove('recording');
-                micBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-                cancelRecBtn.classList.add('hidden');
-                recordingTimer.classList.add('hidden');
-                recordingTimer.textContent = '0:00';
+                            const unreadCount =
+                                data.unreadCounts?.[
+                                    currentUser.uid
+                                ] || 0;
+
+
+                            const div =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            div.className =
+                                `chat-item ${
+                                    currentChatId ===
+                                    docSnap.id
+                                        ? "active-chat"
+                                        : ""
+                                }`;
+
+
+                            div.innerHTML = `
+
+                                <div class="chat-avatar">
+                                    <i class="fa-solid ${icon}"></i>
+                                </div>
+
+                                <div class="chat-item-details">
+
+                                    <div class="chat-name">
+                                        ${displayName}
+                                    </div>
+
+                                    <div class="chat-type">
+                                        ${
+                                            data.type ===
+                                            "group"
+                                                ? "Group Chat"
+                                                : "Direct Message"
+                                        }
+                                    </div>
+
+                                </div>
+
+                                ${
+                                    unreadCount > 0
+                                        ? `<div class="unread-badge">
+                                            ${
+                                                unreadCount > 99
+                                                    ? "99+"
+                                                    : unreadCount
+                                            }
+                                           </div>`
+                                        : ""
+                                }
+
+                            `;
+
+
+                            div.onclick = () => {
+
+                                openChat(
+                                    docSnap.id,
+                                    displayName
+                                );
+
+                                closeSidebar();
+
+                            };
+
+
+                            chatsList.appendChild(
+                                div
+                            );
+
+                        }
+                    );
+
+
+                await Promise.all(
+                    renderPromises
+                );
+
+            },
+
+            error => {
+
+                console.error(
+                    "Chat listener error:",
+                    error
+                );
+
             }
+        );
 
-            let lastTypingUpdate = 0;
-            messageInput.addEventListener('input', () => {
-                const now = Date.now();
-                if (now - lastTypingUpdate > 2000 && currentChatId) {
-                    updateDoc(doc(db, "chats", currentChatId), { [`typing.${currentUser.uid}`]: serverTimestamp() }).catch(() => {});
-                    lastTypingUpdate = now;
-                }
-            });
+}
 
-            sendBtn.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const text = messageInput.value.trim();
-                if (!text || !currentChatId) return;
-                if (!isOnline) { 
-                    alert("You are offline. Message will be sent when connection is restored."); 
-                    return; 
-                }
-                
-                sendBtn.disabled = true;
-                sendBtn.style.opacity = '0.5';
-                
-                try {
-                    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-                    const senderName = userDoc.exists() ? userDoc.data().username : "User";
-                    
-                    await addDoc(collection(db, "chats", currentChatId, "messages"), {
-                        type: 'text', 
-                        text: text, 
-                        senderId: currentUser.uid, 
-                        senderName: senderName, 
-                        timestamp: serverTimestamp()
-                    });
-                    
-                    updateDoc(doc(db, "chats", currentChatId), { 
-                        [`typing.${currentUser.uid}`]: null 
-                    }).catch(() => {});
-                    
-                    const chatRef = doc(db, "chats", currentChatId);
-                    const chatSnap = await getDoc(chatRef);
-                    const updates = {};
-                    chatSnap.data().members.forEach(uid => { 
-                        if (uid !== currentUser.uid) updates[`unreadCounts.${uid}`] = increment(1); 
-                    });
-                    await updateDoc(chatRef, updates);
-                    
-                    messageInput.value = '';
-                } catch (e) {
-                    if (e.code === 'already-exists') {
-                        console.log('Message already sent');
-                        messageInput.value = '';
-                    } else if (e.code === 'unavailable') {
-                        alert("Failed to send. Check your connection.");
-                    } else {
-                        alert("Error: " + e.message);
-                    }
-                } finally {
-                    sendBtn.disabled = false;
-                    sendBtn.style.opacity = '1';
-                }
-            });
 
-            newGroupBtn.onclick = () => showGroupModal();
-            newDmBtn.onclick = () => showModal('Start 1-on-1', 'Enter exact Display Name', 'direct');
-            modalCancel.onclick = () => modal.classList.add('hidden');
+/* =========================================================
+   OPEN CHAT
+========================================================= */
 
-            function showGroupModal() {
-                modalTitle.textContent = 'Create Group';
-                if (knownUsers.length === 0) {
-                    modalContent.innerHTML = `<p class="text-white/70 mb-4">You need to start a 1-on-1 chat with someone before you can add them to a group.</p>`;
+async function openChat(
+    chatId,
+    name
+) {
+
+    currentChatId =
+        chatId;
+
+
+    chatHeader.classList.remove(
+        "hidden"
+    );
+
+
+    chatHeaderName.textContent =
+        name;
+
+
+    inputArea.classList.add(
+        "input-visible"
+    );
+
+
+    emptyChatMsg.classList.add(
+        "hidden"
+    );
+
+
+    const chatRef =
+        doc(
+            db,
+            "chats",
+            chatId
+        );
+
+
+    try {
+
+        await updateDoc(
+            chatRef,
+            {
+                [`unreadCounts.${currentUser.uid}`]:
+                    0
+            }
+        );
+
+    } catch (e) {
+
+        console.warn(
+            "Unread update failed:",
+            e
+        );
+
+    }
+
+
+    if (unsubscribeMessages)
+        unsubscribeMessages();
+
+    if (unsubscribeTyping)
+        unsubscribeTyping();
+
+
+    messagesContainer.innerHTML =
+        "";
+
+
+    const q =
+        query(
+            collection(
+                db,
+                "chats",
+                chatId,
+                "messages"
+            ),
+            orderBy(
+                "timestamp",
+                "asc"
+            )
+        );
+
+
+    let initialLoad = true;
+
+
+    unsubscribeMessages =
+        onSnapshot(
+            q,
+            { includeMetadataChanges: true },
+            snapshot => {
+
+                if (initialLoad) {
+
+                    snapshot.forEach(
+                        docSnap =>
+                            renderMessage(
+                                docSnap
+                            )
+                    );
+
+                    initialLoad = false;
+
                 } else {
-                    modalContent.innerHTML = `<input id="group-name-input" type="text" class="glass-input w-full p-3 rounded-xl mb-4 text-white placeholder-gray-400" placeholder="Enter Group Name"><h3 class="text-white font-semibold mb-3 text-sm">Add Members (People you've chatted with):</h3><div id="member-selection" class="max-h-48 overflow-y-auto space-y-2 mb-4"></div>`;
-                    const memberSelection = document.getElementById('member-selection');
-                    knownUsers.forEach(user => {
-                        const div = document.createElement('div');
-                        div.className = 'flex items-center gap-3 p-2 rounded-lg hover:bg-white/5';
-                        div.innerHTML = `<input type="checkbox" class="user-checkbox member-checkbox" value="${user.id}"><div class="flex-1 text-white text-sm">${user.username}</div>`;
-                        memberSelection.appendChild(div);
-                    });
+
+                    snapshot.docChanges()
+                        .forEach(change => {
+
+                            if (
+                                change.type ===
+                                "added"
+                            ) {
+
+                                renderMessage(
+                                    change.doc
+                                );
+
+
+                                const msg =
+                                    change.doc.data();
+
+
+                                if (
+                                    msg.senderId !==
+                                    currentUser.uid
+                                ) {
+
+                                    notificationSound
+                                        .currentTime = 0;
+
+                                    notificationSound
+                                        .play()
+                                        .catch(
+                                            () => {}
+                                        );
+
+                                }
+
+                            }
+
+                        });
+
                 }
-                modal.classList.remove('hidden');
-                modalSave.onclick = async () => {
-                    if (knownUsers.length === 0) { modal.classList.add('hidden'); return; }
-                    const groupName = document.getElementById('group-name-input').value.trim();
-                    const selectedMembers = Array.from(document.querySelectorAll('.member-checkbox:checked')).map(cb => cb.value);
-                    if (!groupName) return alert("Please enter a group name");
-                    if (selectedMembers.length === 0) return alert("Please select at least one member");
-                    try {
-                        await addDoc(collection(db, "chats"), { name: groupName, type: 'group', members: [currentUser.uid, ...selectedMembers], createdAt: serverTimestamp(), unreadCounts: {} });
-                        modal.classList.add('hidden');
-                    } catch (e) { alert("Failed to create group. Check connection."); }
-                };
+
+
+                requestAnimationFrame(
+                    () => {
+
+                        messagesContainer.scrollTop =
+                            messagesContainer.scrollHeight;
+
+                    }
+                );
+
+            }
+        );
+
+
+    unsubscribeTyping =
+        onSnapshot(
+            chatRef,
+            docSnap => {
+
+                if (!docSnap.exists())
+                    return;
+
+
+                const data =
+                    docSnap.data();
+
+
+                const typingData =
+                    data.typing || {};
+
+
+                const otherUserIds =
+                    data.members.filter(
+                        uid =>
+                            uid !==
+                            currentUser.uid
+                    );
+
+
+                const typingUsers = [];
+
+
+                otherUserIds.forEach(
+                    uid => {
+
+                        if (
+                            typingData[uid] &&
+                            typingData[uid].seconds
+                        ) {
+
+                            const lastTyped =
+                                typingData[uid].seconds *
+                                1000;
+
+
+                            if (
+                                Date.now() -
+                                lastTyped <
+                                3000
+                            ) {
+
+                                const user =
+                                    knownUsers.find(
+                                        u =>
+                                            u.id ===
+                                            uid
+                                    );
+
+
+                                if (user)
+                                    typingUsers.push(
+                                        user.username
+                                    );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+
+                if (
+                    typingUsers.length
+                ) {
+
+                    typingIndicator.textContent =
+                        `${typingUsers.join(", ")} ${
+                            typingUsers.length === 1
+                                ? "is"
+                                : "are"
+                        } typing...`;
+
+                    typingIndicator.classList.remove(
+                        "hidden"
+                    );
+
+                } else {
+
+                    typingIndicator.classList.add(
+                        "hidden"
+                    );
+
+                }
+
+            }
+        );
+
+
+    /* Focus input only after user explicitly opened chat */
+
+    setTimeout(() => {
+
+        if (
+            window.innerWidth >
+            768
+        ) {
+
+            messageInput.focus();
+
+        }
+
+    }, 100);
+
+}
+
+
+/* =========================================================
+   RENDER MESSAGE
+========================================================= */
+
+function renderMessage(
+    docSnap
+) {
+
+    const msg =
+        docSnap.data();
+
+
+    const isMe =
+        msg.senderId ===
+        currentUser.uid;
+
+
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
+
+    bubble.className =
+        `msg-bubble ${
+            isMe
+                ? "sent"
+                : "received"
+        }`;
+
+
+    const deleteBtn =
+        isMe
+            ? `<button
+                    class="delete-msg-btn"
+                    data-id="${docSnap.id}"
+                    title="Delete"
+               >
+                    <i class="fa-solid fa-trash-can"></i>
+               </button>`
+            : "";
+
+
+    let contentHtml = "";
+
+
+    if (
+        msg.type ===
+        "voice"
+    ) {
+
+        contentHtml = `
+
+            ${
+                !isMe
+                    ? `<div class="sender-name">
+                            ${msg.senderName || "User"}
+                       </div>`
+                    : ""
             }
 
-            function showModal(title, placeholder, type) {
-                modalTitle.textContent = title;
-                modalContent.innerHTML = `<input id="modal-input" type="text" class="glass-input w-full p-3 rounded-xl mb-4 text-white placeholder-gray-400" placeholder="${placeholder}">`;
-                modal.classList.remove('hidden');
-                modalSave.onclick = async () => {
-                    const val = document.getElementById('modal-input').value.trim();
-                    if (!val) return; modal.classList.add('hidden');
-                    if (type === 'group') return;
-                    try {
-                        const userQuery = query(collection(db, "users"), where("username", "==", val));
-                        const querySnapshot = await getDocs(userQuery);
-                        if (querySnapshot.empty) return alert("User not found. Check the exact spelling.");
-                        let targetUser = null;
-                        querySnapshot.forEach(d => { targetUser = { id: d.id, ...d.data() }; });
-                        if (targetUser.id === currentUser.uid) return alert("You cannot message yourself.");
-                        const chatId = [currentUser.uid, targetUser.id].sort().join('_');
-                        await setDoc(doc(db, "chats", chatId), { type: 'direct', members: [currentUser.uid, targetUser.id], createdAt: serverTimestamp(), unreadCounts: {} }, { merge: true });
-                    } catch (e) { alert("Failed to start chat. Check connection."); }
-                };
+            <audio
+                controls
+                src="${msg.audioData}"
+                class="voice-note-player"
+            ></audio>
+
+        `;
+
+    } else {
+
+        contentHtml = `
+
+            ${
+                !isMe
+                    ? `<div class="sender-name">
+                            ${msg.senderName || "User"}
+                       </div>`
+                    : ""
             }
-        });
-    </script>
+
+            <div class="message-text">
+                ${msg.text || ""}
+            </div>
+
+        `;
+
+    }
+
+
+    bubble.innerHTML = `
+
+        ${deleteBtn}
+
+        ${contentHtml}
+
+        <span class="msg-time">
+            ${getSmartTime(msg.timestamp)}
+        </span>
+
+    `;
+
+
+    messagesContainer.appendChild(
+        bubble
+    );
+
+}
+
+
+/* =========================================================
+   DELETE MESSAGE
+========================================================= */
+
+messagesContainer.addEventListener(
+    "click",
+    async e => {
+
+        const deleteBtn =
+            e.target.closest(
+                ".delete-msg-btn"
+            );
+
+
+        if (
+            !deleteBtn ||
+            !currentChatId
+        )
+            return;
+
+
+        if (
+            !confirm(
+                "Delete this message?"
+            )
+        )
+            return;
+
+
+        try {
+
+            await deleteDoc(
+                doc(
+                    db,
+                    "chats",
+                    currentChatId,
+                    "messages",
+                    deleteBtn.dataset.id
+                )
+            );
+
+        } catch (e) {
+
+            alert(
+                "Failed to delete message."
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   TYPING
+========================================================= */
+
+let lastTypingUpdate = 0;
+
+
+messageInput.addEventListener(
+    "input",
+    () => {
+
+        const now =
+            Date.now();
+
+
+        if (
+            now -
+            lastTypingUpdate >
+            2000 &&
+            currentChatId
+        ) {
+
+            updateDoc(
+                doc(
+                    db,
+                    "chats",
+                    currentChatId
+                ),
+                {
+                    [`typing.${currentUser.uid}`]:
+                        serverTimestamp()
+                }
+            ).catch(
+                () => {}
+            );
+
+
+            lastTypingUpdate =
+                now;
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SEND MESSAGE
+========================================================= */
+
+sendBtn.addEventListener(
+    "click",
+    async e => {
+
+        e.preventDefault();
+
+
+        const text =
+            messageInput.value.trim();
+
+
+        if (
+            !text ||
+            !currentChatId
+        )
+            return;
+
+
+        if (!isOnline) {
+
+            alert(
+                "You are offline."
+            );
+
+            return;
+
+        }
+
+
+        sendBtn.disabled =
+            true;
+
+
+        sendBtn.classList.add(
+            "sending"
+        );
+
+
+        try {
+
+            const userDoc =
+                await getDoc(
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid
+                    )
+                );
+
+
+            const senderName =
+                userDoc.exists()
+                    ? userDoc.data()
+                        .username
+                    : "User";
+
+
+            await addDoc(
+                collection(
+                    db,
+                    "chats",
+                    currentChatId,
+                    "messages"
+                ),
+                {
+                    type: "text",
+                    text: text,
+                    senderId:
+                        currentUser.uid,
+                    senderName:
+                        senderName,
+                    timestamp:
+                        serverTimestamp()
+                }
+            );
+
+
+            await updateDoc(
+                doc(
+                    db,
+                    "chats",
+                    currentChatId
+                ),
+                {
+                    [`typing.${currentUser.uid}`]:
+                        null
+                }
+            ).catch(
+                () => {}
+            );
+
+
+            const chatRef =
+                doc(
+                    db,
+                    "chats",
+                    currentChatId
+                );
+
+
+            const chatSnap =
+                await getDoc(
+                    chatRef
+                );
+
+
+            if (
+                chatSnap.exists()
+            ) {
+
+                const members =
+                    chatSnap.data()
+                        .members || [];
+
+
+                const updates = {};
+
+
+                members.forEach(
+                    uid => {
+
+                        if (
+                            uid !==
+                            currentUser.uid
+                        ) {
+
+                            updates[
+                                `unreadCounts.${uid}`
+                            ] =
+                                increment(1);
+
+                        }
+
+                    }
+                );
+
+
+                if (
+                    Object.keys(
+                        updates
+                    ).length
+                ) {
+
+                    await updateDoc(
+                        chatRef,
+                        updates
+                    );
+
+                }
+
+            }
+
+
+            messageInput.value =
+                "";
+
+
+            messageInput.focus();
+
+
+        } catch (e) {
+
+            console.error(e);
+
+            alert(
+                "Failed to send message."
+            );
+
+        } finally {
+
+            sendBtn.disabled =
+                false;
+
+            sendBtn.classList.remove(
+                "sending"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   VOICE RECORDING
+========================================================= */
+
+micBtn.addEventListener(
+    "click",
+    async () => {
+
+        if (
+            micBtn.classList.contains(
+                "recording"
+            )
+        ) {
+
+            stopRecording();
+
+            return;
+
+        }
+
+
+        if (!currentChatId) {
+
+            alert(
+                "Select a chat first."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const stream =
+                await navigator.mediaDevices
+                    .getUserMedia({
+                        audio: true
+                    });
+
+
+            mediaRecorder =
+                new MediaRecorder(
+                    stream
+                );
+
+
+            audioChunks = [];
+
+            recordingSeconds = 0;
+
+
+            mediaRecorder.ondataavailable =
+                event => {
+
+                    if (
+                        event.data.size >
+                        0
+                    ) {
+
+                        audioChunks.push(
+                            event.data
+                        );
+
+                    }
+
+                };
+
+
+            mediaRecorder.onstop =
+                async () => {
+
+                    stream
+                        .getTracks()
+                        .forEach(
+                            track =>
+                                track.stop()
+                        );
+
+
+                    if (
+                        audioChunks.length
+                    ) {
+
+                        const blob =
+                            new Blob(
+                                audioChunks,
+                                {
+                                    type:
+                                        "audio/webm"
+                                }
+                            );
+
+
+                        const reader =
+                            new FileReader();
+
+
+                        reader.readAsDataURL(
+                            blob
+                        );
+
+
+                        reader.onloadend =
+                            async () => {
+
+                                try {
+
+                                    const userDoc =
+                                        await getDoc(
+                                            doc(
+                                                db,
+                                                "users",
+                                                currentUser.uid
+                                            )
+                                        );
+
+
+                                    const senderName =
+                                        userDoc.exists()
+                                            ? userDoc
+                                                .data()
+                                                .username
+                                            : "User";
+
+
+                                    await addDoc(
+                                        collection(
+                                            db,
+                                            "chats",
+                                            currentChatId,
+                                            "messages"
+                                        ),
+                                        {
+                                            type:
+                                                "voice",
+
+                                            audioData:
+                                                reader.result,
+
+                                            senderId:
+                                                currentUser.uid,
+
+                                            senderName:
+                                                senderName,
+
+                                            timestamp:
+                                                serverTimestamp()
+                                        }
+                                    );
+
+                                } catch (error) {
+
+                                    console.error(
+                                        error
+                                    );
+
+                                    alert(
+                                        "Failed to send voice note."
+                                    );
+
+                                }
+
+                            };
+
+                    }
+
+
+                    resetVoiceUI();
+
+                };
+
+
+            mediaRecorder.start();
+
+
+            micBtn.classList.add(
+                "recording"
+            );
+
+
+            micBtn.innerHTML =
+                `<i class="fa-solid fa-stop"></i>`;
+
+
+            cancelRecBtn.classList.remove(
+                "hidden"
+            );
+
+
+            recordingTimer.classList.remove(
+                "hidden"
+            );
+
+
+            recordingInterval =
+                setInterval(
+                    () => {
+
+                        recordingSeconds++;
+
+
+                        const mins =
+                            Math.floor(
+                                recordingSeconds /
+                                60
+                            );
+
+
+                        const secs =
+                            recordingSeconds %
+                            60;
+
+
+                        recordingTimer.textContent =
+                            `${mins}:${secs
+                                .toString()
+                                .padStart(
+                                    2,
+                                    "0"
+                                )}`;
+
+
+                        if (
+                            recordingSeconds >=
+                            MAX_RECORDING_SECONDS
+                        ) {
+
+                            stopRecording();
+
+                        }
+
+                    },
+                    1000
+                );
+
+
+        } catch (err) {
+
+            alert(
+                "Microphone access denied or unavailable."
+            );
+
+        }
+
+    }
+);
+
+
+function stopRecording() {
+
+    if (
+        mediaRecorder &&
+        mediaRecorder.state !==
+        "inactive"
+    ) {
+
+        mediaRecorder.stop();
+
+    }
+
+}
+
+
+cancelRecBtn.addEventListener(
+    "click",
+    () => {
+
+        if (
+            mediaRecorder &&
+            mediaRecorder.state !==
+            "inactive"
+        ) {
+
+            audioChunks = [];
+
+            mediaRecorder.stop();
+
+        }
+
+        resetVoiceUI();
+
+    }
+);
+
+
+function resetVoiceUI() {
+
+    clearInterval(
+        recordingInterval
+    );
+
+
+    micBtn.classList.remove(
+        "recording"
+    );
+
+
+    micBtn.innerHTML =
+        `<i class="fa-solid fa-microphone"></i>`;
+
+
+    cancelRecBtn.classList.add(
+        "hidden"
+    );
+
+
+    recordingTimer.classList.add(
+        "hidden"
+    );
+
+
+    recordingTimer.textContent =
+        "0:00";
+
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+newGroupBtn.onclick =
+    () => showGroupModal();
+
+
+newDmBtn.onclick =
+    () =>
+        showModal(
+            "Start 1-on-1",
+            "Enter exact Display Name",
+            "direct"
+        );
+
+
+modalCancel.onclick =
+    () =>
+        modal.classList.add(
+            "hidden"
+        );
+
+
+function showGroupModal() {
+
+    modalTitle.textContent =
+        "Create Group";
+
+
+    if (
+        knownUsers.length === 0
+    ) {
+
+        modalContent.innerHTML =
+            `<p class="text-white/70 mb-4">
+                You need to start a 1-on-1
+                chat with someone first.
+             </p>`;
+
+    } else {
+
+        modalContent.innerHTML = `
+
+            <input
+                id="group-name-input"
+                type="text"
+                class="glass-input w-full p-3 rounded-xl mb-4 text-white"
+                placeholder="Enter Group Name"
+            >
+
+            <h3 class="text-white font-semibold mb-3 text-sm">
+                Add Members
+            </h3>
+
+            <div
+                id="member-selection"
+                class="max-h-48 overflow-y-auto space-y-2 mb-4"
+            ></div>
+
+        `;
+
+
+        const selection =
+            document.getElementById(
+                "member-selection"
+            );
+
+
+        knownUsers.forEach(
+            user => {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "flex items-center gap-3 p-2 rounded-lg";
+
+
+                div.innerHTML = `
+
+                    <input
+                        type="checkbox"
+                        class="user-checkbox member-checkbox"
+                        value="${user.id}"
+                    >
+
+                    <div class="flex-1 text-white text-sm">
+                        ${user.username}
+                    </div>
+
+                `;
+
+
+                selection.appendChild(
+                    div
+                );
+
+            }
+        );
+
+    }
+
+
+    modal.classList.remove(
+        "hidden"
+    );
+
+
+    modalSave.onclick =
+        async () => {
+
+            if (
+                knownUsers.length ===
+                0
+            ) {
+
+                modal.classList.add(
+                    "hidden"
+                );
+
+                return;
+
+            }
+
+
+            const groupName =
+                document.getElementById(
+                    "group-name-input"
+                )
+                .value
+                .trim();
+
+
+            const selectedMembers =
+                Array.from(
+                    document.querySelectorAll(
+                        ".member-checkbox:checked"
+                    )
+                )
+                .map(
+                    cb => cb.value
+                );
+
+
+            if (!groupName) {
+
+                alert(
+                    "Please enter a group name."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                selectedMembers.length ===
+                0
+            ) {
+
+                alert(
+                    "Please select at least one member."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                await addDoc(
+                    collection(
+                        db,
+                        "chats"
+                    ),
+                    {
+                        name:
+                            groupName,
+
+                        type:
+                            "group",
+
+                        members: [
+                            currentUser.uid,
+                            ...selectedMembers
+                        ],
+
+                        createdAt:
+                            serverTimestamp(),
+
+                        unreadCounts:
+                            {}
+                    }
+                );
+
+
+                modal.classList.add(
+                    "hidden"
+                );
+
+
+            } catch (e) {
+
+                alert(
+                    "Failed to create group."
+                );
+
+            }
+
+        };
+
+}
+
+
+function showModal(
+    title,
+    placeholder,
+    type
+) {
+
+    modalTitle.textContent =
+        title;
+
+
+    modalContent.innerHTML = `
+
+        <input
+            id="modal-input"
+            type="text"
+            class="glass-input w-full p-3 rounded-xl mb-4 text-white"
+            placeholder="${placeholder}"
+        >
+
+    `;
+
+
+    modal.classList.remove(
+        "hidden"
+    );
+
+
+    modalSave.onclick =
+        async () => {
+
+            const val =
+                document.getElementById(
+                    "modal-input"
+                )
+                .value
+                .trim();
+
+
+            if (!val)
+                return;
+
+
+            modal.classList.add(
+                "hidden"
+            );
+
+
+            try {
+
+                const userQuery =
+                    query(
+                        collection(
+                            db,
+                            "users"
+                        ),
+                        where(
+                            "username",
+                            "==",
+                            val
+                        )
+                    );
+
+
+                const querySnapshot =
+                    await getDocs(
+                        userQuery
+                    );
+
+
+                if (
+                    querySnapshot.empty
+                ) {
+
+                    alert(
+                        "User not found. Check the exact spelling."
+                    );
+
+                    return;
+
+                }
+
+
+                let targetUser =
+                    null;
+
+
+                querySnapshot.forEach(
+                    d => {
+
+                        targetUser = {
+                            id: d.id,
+                            ...d.data()
+                        };
+
+                    }
+                );
+
+
+                if (
+                    targetUser.id ===
+                    currentUser.uid
+                ) {
+
+                    alert(
+                        "You cannot message yourself."
+                    );
+
+                    return;
+
+                }
+
+
+                const chatId =
+                    [
+                        currentUser.uid,
+                        targetUser.id
+                    ]
+                    .sort()
+                    .join("_");
+
+
+                await setDoc(
+                    doc(
+                        db,
+                        "chats",
+                        chatId
+                    ),
+                    {
+                        type:
+                            "direct",
+
+                        members: [
+                            currentUser.uid,
+                            targetUser.id
+                        ],
+
+                        createdAt:
+                            serverTimestamp(),
+
+                        unreadCounts:
+                            {}
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+
+            } catch (e) {
+
+                alert(
+                    "Failed to start chat."
+                );
+
+            }
+
+        };
+
+}
+
+</script>
+
 </body>
 </html>
