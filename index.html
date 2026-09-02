@@ -74,7 +74,7 @@
                 </div>
                 
                 <!-- NO INLINE STYLES HERE. Tailwind 'hidden' class controls visibility. -->
-                <div id="input-area" class="glass-header p-4 border-t border-white/10 hidden">
+                <div id="input-area" class="glass-header p-4 border-t border-white/10" style="display: none;">
                     <div id="typing-indicator" class="typing-indicator hidden"></div>
                     <div id="voice-controls" class="voice-controls flex items-center gap-2 w-full">
                         <button id="mic-btn" class="mic-btn flex" title="Record Voice Note"><i class="fa-solid fa-microphone"></i></button>
@@ -318,82 +318,60 @@
                 });
             }
 
-            function toggleChat(chatId, name) {
-                if (currentChatId === chatId) {
-                    currentChatId = null; 
-                    chatHeader.classList.remove('flex');
-                    chatHeader.classList.add('hidden');
-                    inputArea.classList.remove('flex');
-                    inputArea.classList.add('hidden');
-                    typingIndicator.classList.add('hidden');
-                    emptyChatMsg.classList.remove('hidden');
-                    messagesContainer.innerHTML = '<p id="empty-chat-msg" class="text-center text-white/50 mt-10 text-lg"><i class="fa-regular fa-comments mr-2"></i>Select a chat to start messaging</p>';
-                    loadChats();
-                    if (unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
-                    if (unsubscribeTyping) { unsubscribeTyping(); unsubscribeTyping = null; }
-                } else { openChat(chatId, name); }
-            }
-
             async function openChat(chatId, name) {
-                currentChatId = chatId;
-                chatHeader.textContent = name; 
-                chatHeader.classList.remove('hidden');
-                chatHeader.classList.add('flex');
-                inputArea.classList.remove('hidden');
-                inputArea.classList.add('flex');
-                emptyChatMsg.classList.add('hidden');
-                
-                const chatRef = doc(db, "chats", chatId);
-                await updateDoc(chatRef, { [`unreadCounts.${currentUser.uid}`]: 0 });
-                if (unsubscribeMessages) unsubscribeMessages();
-                if (unsubscribeTyping) unsubscribeTyping();
-                messagesContainer.innerHTML = '';
-                const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-                let isInitialMessageLoad = true;
-                unsubscribeMessages = onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
-                    if (isInitialMessageLoad) {
-                        snapshot.forEach((docSnap) => renderMessage(docSnap));
-                        isInitialMessageLoad = false;
-                    } else {
-                        snapshot.docChanges().forEach((change) => {
-                            if (change.type === "added") {
-                                renderMessage(change.doc);
-                                const msg = change.doc.data();
-                                if (msg.senderId !== currentUser.uid) {
-                                    notificationSound.currentTime = 0;
-                                    notificationSound.play().catch(() => {});
-                                }
-                            }
-                        });
+    currentChatId = chatId;
+    chatHeader.textContent = name; 
+    chatHeader.style.display = 'flex'; 
+    inputArea.style.display = 'flex'; 
+    emptyChatMsg.classList.add('hidden');
+    
+    const chatRef = doc(db, "chats", chatId);
+    await updateDoc(chatRef, { [`unreadCounts.${currentUser.uid}`]: 0 });
+    if (unsubscribeMessages) unsubscribeMessages();
+    if (unsubscribeTyping) unsubscribeTyping();
+    messagesContainer.innerHTML = '';
+    const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+    let isInitialMessageLoad = true;
+    unsubscribeMessages = onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
+        if (isInitialMessageLoad) {
+            snapshot.forEach((docSnap) => renderMessage(docSnap));
+            isInitialMessageLoad = false;
+        } else {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    renderMessage(change.doc);
+                    const msg = change.doc.data();
+                    if (msg.senderId !== currentUser.uid) {
+                        notificationSound.currentTime = 0;
+                        notificationSound.play().catch(() => {});
                     }
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                });
-                unsubscribeTyping = onSnapshot(chatRef, (docSnap) => {
-                    if(docSnap.exists()) {
-                        const data = docSnap.data();
-                        const typingData = data.typing || {};
-                        const otherUserIds = data.members.filter(uid => uid !== currentUser.uid);
-                        let typingUsers = [];
-                        otherUserIds.forEach(uid => {
-                            if(typingData[uid] && typingData[uid].seconds) {
-                                const lastTyped = typingData[uid].seconds * 1000;
-                                if((Date.now() - lastTyped) < 3000) {
-                                    const user = knownUsers.find(u => u.id === uid);
-                                    if(user) typingUsers.push(user.username);
-                                }
-                            }
-                        });
-                        if(typingUsers.length > 0) {
-                            typingIndicator.textContent = `${typingUsers.join(', ')} ${typingUsers.length === 1 ? 'is' : 'are'} typing...`;
-                            typingIndicator.classList.remove('hidden');
-                            typingIndicator.classList.add('block');
-                        } else { 
-                            typingIndicator.classList.remove('block');
-                            typingIndicator.classList.add('hidden'); 
-                        }
+                }
+            });
+        }
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
+    unsubscribeTyping = onSnapshot(chatRef, (docSnap) => {
+        if(docSnap.exists()) {
+            const data = docSnap.data();
+            const typingData = data.typing || {};
+            const otherUserIds = data.members.filter(uid => uid !== currentUser.uid);
+            let typingUsers = [];
+            otherUserIds.forEach(uid => {
+                if(typingData[uid] && typingData[uid].seconds) {
+                    const lastTyped = typingData[uid].seconds * 1000;
+                    if((Date.now() - lastTyped) < 3000) {
+                        const user = knownUsers.find(u => u.id === uid);
+                        if(user) typingUsers.push(user.username);
                     }
-                });
-            }
+                }
+            });
+            if(typingUsers.length > 0) {
+                typingIndicator.textContent = `${typingUsers.join(', ')} ${typingUsers.length === 1 ? 'is' : 'are'} typing...`;
+                typingIndicator.style.display = 'block';
+            } else { typingIndicator.style.display = 'none'; }
+        }
+    });
+}
 
             function renderMessage(docSnap) {
                 const msg = docSnap.data();
